@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
 import windows.LibraryWindow;
 
 public class Library {
@@ -24,9 +28,7 @@ public class Library {
 		creatorBooks = new CreatorBooks(booksList);
 		
 		this.listeners = new Listeners(this);
-		window.setButNewListener(listeners.getNewActionListener());
-		
-		
+		window.setButNewListener(listeners.getNewActionListener());		
 	}
 	
 	public void editSelectBook() {
@@ -35,7 +37,8 @@ public class Library {
 	
 	public void createNewBook() {
 		creatorBooks.createNew(window);
-		booksList.add(new Book("J.K.Roaling"));
+		
+//		booksList.add(new Book("J.K.Roaling"));
 		ArrayList<String> arList = new ArrayList<String>();
 		for(Book book : booksList) {
 			arList.add(book.getTitle());
