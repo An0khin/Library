@@ -1,5 +1,10 @@
+package windows;
+
 import java.awt.*;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 /*
  * Created by JFormDesigner on Fri May 06 19:36:43 YEKT 2022
  */
@@ -19,6 +24,26 @@ public class LibraryWindow extends JFrame {
 		return window;
 	}
 	
+	public void setButNewListener(ActionListener listener) {
+		buttonNew.addActionListener(listener);
+	}
+	
+	public void setButEditListener(ActionListener listener) {
+		buttonEdit.addActionListener(listener);
+	}
+	
+	public void setTextInfoArea(String text) {
+		infoArea.setText(text);
+	}
+	
+	public void setMainListSelectionListener(ListSelectionListener listener) {
+		mainList.addListSelectionListener(listener);
+	}
+	
+	public void setMainListData(String[] listData) {
+		mainList.setListData(listData);
+	}
+	
 	private LibraryWindow() {
 		initComponents();
 	}
@@ -29,8 +54,9 @@ public class LibraryWindow extends JFrame {
 		viewMenu = new JMenu();
 		booksMenu = new JMenuItem();
 		authorsMenu = new JMenuItem();
+		genresMenu = new JMenuItem();
 		scrollPane1 = new JScrollPane();
-		mainList = new JList();
+		mainList = new JList<>();
 		scrollPane2 = new JScrollPane();
 		infoArea = new JTextArea();
 		splitPane1 = new JSplitPane();
@@ -58,6 +84,10 @@ public class LibraryWindow extends JFrame {
 				//---- authorsMenu ----
 				authorsMenu.setText("Authors");
 				viewMenu.add(authorsMenu);
+
+				//---- genresMenu ----
+				genresMenu.setText("Genres");
+				viewMenu.add(genresMenu);
 			}
 			menuBar1.add(viewMenu);
 		}
@@ -101,8 +131,9 @@ public class LibraryWindow extends JFrame {
 	private JMenu viewMenu;
 	private JMenuItem booksMenu;
 	private JMenuItem authorsMenu;
+	private JMenuItem genresMenu;
 	private JScrollPane scrollPane1;
-	private JList mainList;
+	private JList<String> mainList;
 	private JScrollPane scrollPane2;
 	private JTextArea infoArea;
 	private JSplitPane splitPane1;
