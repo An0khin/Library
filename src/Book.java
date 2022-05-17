@@ -10,6 +10,11 @@ public class Book {
 	public Book(String title) {
 		super();
 		this.title = title;
+		this.author = Author.getNull();
+		this.genre = Genres.NULL;
+		this.pages = 0;
+		this.description = "";
+		this.rating = 0;
 	}
 	
 	//Getters and Setters	

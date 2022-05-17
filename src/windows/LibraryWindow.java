@@ -24,6 +24,10 @@ public class LibraryWindow extends JFrame {
 		return window;
 	}
 	
+	public String getTitleValue() {
+		return mainList.getSelectedValue();
+	}
+	
 	public void setButNewListener(ActionListener listener) {
 		buttonNew.addActionListener(listener);
 	}

@@ -37,6 +37,8 @@ public class CreatorBooks {
 		    }
 		}
 		
+		BuilderXML.addBook(book);
+		
 		if(book != null) {
 			booksList.add(book);
 		}

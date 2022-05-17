@@ -26,9 +26,11 @@ public class Library {
 		//NewActionListener newListener = Listeners.NewActionListener();
 		
 		creatorBooks = new CreatorBooks(booksList);
+		BuilderXML.buildCatalogue();
 		
 		this.listeners = new Listeners(this);
-		window.setButNewListener(listeners.getNewActionListener());		
+		window.setButNewListener(listeners.getNewActionListener());
+		window.setMainListSelectionListener(listeners.getListSelectionListener());
 	}
 	
 	public void editSelectBook() {
@@ -45,5 +47,10 @@ public class Library {
 		}
 		window.setMainListData(arList.toArray(new String[0]));
 //		window.validate();
+	}
+	
+	public void openBook() {
+		String title = window.getTitleValue();
+		
 	}
 }

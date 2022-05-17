@@ -5,6 +5,10 @@ public class Author {
 	private List<Book> booksList = new ArrayList<>(); //Will be replaced by database
 	private String name;
 	private String description;
+	
+	public static Author getNull() {
+		return new Author("");
+	}
 		
 	public Author(String name) {
 		super();

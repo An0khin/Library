@@ -1,5 +1,7 @@
 import java.awt.event.ActionListener;
 
+import javax.swing.event.ListSelectionListener;
+
 public class Listeners {
 	private Library library;
 	
@@ -13,5 +15,13 @@ public class Listeners {
 	
 	public ActionListener getEditActionListener() {
 		return e -> library.editSelectBook();
+	}
+	
+	public ListSelectionListener getListSelectionListener() {
+		return e -> {
+			if(!e.getValueIsAdjusting()) {
+				library.openBook();
+			}
+		};
 	}
 }
