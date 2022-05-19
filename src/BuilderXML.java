@@ -75,6 +75,9 @@ public class BuilderXML {
 		}
 	}
 	
+	public static void removeBook(Book book) {
+		//deleting book
+	}
 	
 	public static Node getBook(Document doc, int id, String title, String author, String genre, int pages, String description, int rating) {
 		Element book = doc.createElement("Book");

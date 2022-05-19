@@ -31,11 +31,39 @@ public class Library {
 		
 		this.listeners = new Listeners(this);
 		window.setButNewListener(listeners.getNewActionListener());
+		window.setButEditListener(listeners.getEditActionListener());
 		window.setMainListSelectionListener(listeners.getListSelectionListener());
 	}
 	
 	public void editSelectBook() {
-		
+		System.out.println(window.hasSelected());
+		if(window.hasSelected()) {
+			String title = window.getTitleValue();
+			
+			Book curBook = findBookById(getIdFromTitle(title));
+			int curId = curBook.getId();
+			
+			JTextField titleField = new JTextField(curBook.getTitle());
+			JTextField authorField = new JTextField(curBook.getAuthor().getName());
+			
+			Object[] message = {
+				    "Title:", titleField,
+				    "Author:", authorField
+				};
+
+			int option = JOptionPane.showConfirmDialog(window, message, curBook.getTitle(), JOptionPane.INFORMATION_MESSAGE);
+			
+			if (option == JOptionPane.OK_OPTION) {
+				
+				//deleting old version of book
+				creatorBooks.deleteBook(curBook);
+				
+				Book book = new Book(titleField.getText(), curId);
+				book.setAuthor(new Author(authorField.getText()));
+				
+				creatorBooks.addBook(book);
+			}
+		}
 	}
 	
 	public void createNewBook() {
@@ -51,7 +79,7 @@ public class Library {
 	}
 	
 	public Book findBookById(int id) {
-		System.out.println(id);
+		//System.out.println(id);
 		for(Book book : booksList) {
 			if(book.getId() == id) {
 				return book;
@@ -72,6 +100,12 @@ public class Library {
 			
 			Book curBook = findBookById(getIdFromTitle(title));
 			
+			Object[] message = {
+				"Title:", curBook.getTitle(),
+				"Author:", curBook.getAuthor().getName()
+			};
+			
+			JOptionPane.showMessageDialog(null, message, curBook.getTitle(), JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 }

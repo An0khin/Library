@@ -27,7 +27,7 @@ public class CreatorBooks {
 		    "Author:", authorField
 		};
 
-		int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+		int option = JOptionPane.showConfirmDialog(frame, message, "Login", JOptionPane.OK_CANCEL_OPTION);
 		if (option == JOptionPane.OK_OPTION) {
 		    if(!usernameField.getText().isEmpty()) {
 		    	book = new Book(usernameField.getText(), curId++);
@@ -37,11 +37,21 @@ public class CreatorBooks {
 			    }
 		    }
 		}
-		
-		BuilderXML.addBook(book);
-		
+				
 		if(book != null) {
+			BuilderXML.addBook(book);
 			booksList.add(book);
 		}
+	}
+	
+	public void addBook(Book book) {
+		BuilderXML.addBook(book);
+		booksList.add(book);
+	}
+	
+	public void deleteBook(Book book) {
+		//Deleting book and decrement id
+		booksList.remove(book);
+		
 	}
 }
