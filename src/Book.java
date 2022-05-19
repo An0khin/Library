@@ -6,8 +6,9 @@ public class Book {
 	private int pages;
 	private String description;
 	private int rating;
+	private int id;
 	
-	public Book(String title) {
+	public Book(String title, int id) {
 		super();
 		this.title = title;
 		this.author = Author.getNull();
@@ -15,6 +16,7 @@ public class Book {
 		this.pages = 0;
 		this.description = "";
 		this.rating = 0;
+		this.id = id;
 	}
 	
 	//Getters and Setters	
@@ -53,6 +55,10 @@ public class Book {
 	}
 	public void setGenre(Genres genre) {
 		this.genre = genre;
+	}
+
+	public int getId() {
+		return id;
 	}
 		
 }

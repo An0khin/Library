@@ -55,7 +55,7 @@ public class BuilderXML {
 			NodeList list = doc.getElementsByTagName("BookCatalogue");
 			Element root = (Element) list.item(0);
 			
-			root.appendChild(getBook(doc, book.getTitle(), book.getAuthor().getName(), book.getGenre().getName(),
+			root.appendChild(getBook(doc, book.getId(), book.getTitle(), book.getAuthor().getName(), book.getGenre().getName(),
 					book.getPages(), book.getDescription(), book.getRating()));
 			
 			doc.getDocumentElement().normalize();
@@ -76,9 +76,10 @@ public class BuilderXML {
 	}
 	
 	
-	public static Node getBook(Document doc, String title, String author, String genre, int pages, String description, int rating) {
+	public static Node getBook(Document doc, int id, String title, String author, String genre, int pages, String description, int rating) {
 		Element book = doc.createElement("Book");
 		
+		book.appendChild(getElement(doc, "id", String.valueOf(id)));
 		book.appendChild(getElement(doc, "title", title));
 		book.appendChild(getElement(doc, "author", author));
 		book.appendChild(getElement(doc, "genre", genre));

@@ -8,6 +8,7 @@ import javax.swing.text.JTextComponent;
 
 public class CreatorBooks {
 	List<Book> booksList;
+	int curId = 0;
 	
 	public CreatorBooks(List<Book> booksList) {
 		this.booksList = booksList;
@@ -29,7 +30,7 @@ public class CreatorBooks {
 		int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
 		if (option == JOptionPane.OK_OPTION) {
 		    if(!usernameField.getText().isEmpty()) {
-		    	book = new Book(usernameField.getText());
+		    	book = new Book(usernameField.getText(), curId++);
 		    	if(!authorField.getText().isEmpty()) {
 			    	Author author = new Author(authorField.getText());
 			    	book.setAuthor(author);
