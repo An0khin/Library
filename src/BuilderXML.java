@@ -75,7 +75,44 @@ public class BuilderXML {
 		}
 	}
 	
-	public static void removeBook(Book book) {
+	public static void editBook(Book book) {
+		String filePath = "src/Books.xml";
+		File file = new File(filePath);
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+		
+		try {
+			builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(file);
+			doc.getDocumentElement().normalize();
+						
+			NodeList mainList = doc.getElementsByTagName("BookCatalogue");
+			Element root = (Element) mainList.item(0);
+			
+			NodeList list = root.getChildNodes();
+						
+			for(int i = 0; i < list.getLength(); i++) {
+				Element el = (Element) list.item(i);
+				Element newEl = (Element) el.cloneNode(true);
+				if(Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent()) == book.getId()) {
+					el.getElementsByTagName("title").item(0).setTextContent(book.getTitle());
+					el.getElementsByTagName("author").item(0).setTextContent(book.getAuthor().getName());
+				}
+			}
+			
+			doc.getDocumentElement().normalize();
+			
+			DOMSource source = new DOMSource(doc);
+			
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			
+			StreamResult result = new StreamResult(new File("src/Books.xml"));
+			
+			transformer.transform(source, result);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 		//deleting book
 	}
 	

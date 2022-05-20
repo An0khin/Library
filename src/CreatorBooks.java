@@ -44,14 +44,24 @@ public class CreatorBooks {
 		}
 	}
 	
+	public void editBook(Book book) {
+		for(int i = 0; i < booksList.size(); i++) {
+			if(booksList.get(i).getId() == book.getId()) {
+				booksList.set(i, book);
+			}
+		}
+		BuilderXML.editBook(book);
+	}
+	
 	public void addBook(Book book) {
 		BuilderXML.addBook(book);
 		booksList.add(book);
 	}
-	
+		
 	public void deleteBook(Book book) {
 		//Deleting book and decrement id
-		booksList.remove(book);
+		//booksList.remove(book);
+		//BuilderXML.removeBook(book);
 		
 	}
 }

@@ -54,28 +54,27 @@ public class Library {
 			int option = JOptionPane.showConfirmDialog(window, message, curBook.getTitle(), JOptionPane.INFORMATION_MESSAGE);
 			
 			if (option == JOptionPane.OK_OPTION) {
+								
+				curBook.setTitle(titleField.getText());
+				curBook.setAuthor(new Author(authorField.getText()));
 				
-				//deleting old version of book
-				creatorBooks.deleteBook(curBook);
-				
-				Book book = new Book(titleField.getText(), curId);
-				book.setAuthor(new Author(authorField.getText()));
-				
-				creatorBooks.addBook(book);
+				creatorBooks.editBook(curBook);
 			}
 		}
+		updateList();
 	}
 	
 	public void createNewBook() {
 		creatorBooks.createNew(window);
-		
-//		booksList.add(new Book("J.K.Roaling"));
+		updateList();
+	}
+	
+	public void updateList() {
 		ArrayList<String> arList = new ArrayList<String>();
 		for(Book book : booksList) {
 			arList.add("#id=" + book.getId() + "# " + book.getTitle());
 		}
 		window.setMainListData(arList.toArray(new String[0]));
-//		window.validate();
 	}
 	
 	public Book findBookById(int id) {
