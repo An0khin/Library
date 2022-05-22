@@ -24,4 +24,8 @@ public class Listeners {
 			}
 		};
 	}
+	
+	public ActionListener getDeleteActionListener() {
+		return e -> library.deleteCurrent();
+	}
 }

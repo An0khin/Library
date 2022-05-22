@@ -75,7 +75,7 @@ public class BuilderXML {
 		}
 	}
 	
-	public static void editBook(Book book) {
+	public static void editBookById(Book book, int id) {
 		String filePath = "src/Books.xml";
 		File file = new File(filePath);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -93,10 +93,11 @@ public class BuilderXML {
 						
 			for(int i = 0; i < list.getLength(); i++) {
 				Element el = (Element) list.item(i);
-				Element newEl = (Element) el.cloneNode(true);
-				if(Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent()) == book.getId()) {
+				if(Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent()) == id) {
+					el.getElementsByTagName("id").item(0).setTextContent(Integer.toString(book.getId()));
 					el.getElementsByTagName("title").item(0).setTextContent(book.getTitle());
 					el.getElementsByTagName("author").item(0).setTextContent(book.getAuthor().getName());
+					break;
 				}
 			}
 			
@@ -113,7 +114,55 @@ public class BuilderXML {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		//deleting book
+	}
+	
+	public static void removeBook(Book book) {
+		String filePath = "src/Books.xml";
+		File file = new File(filePath);
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+		
+		try {
+			builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(file);
+			doc.getDocumentElement().normalize();
+						
+			NodeList mainList = doc.getElementsByTagName("BookCatalogue");
+			Element root = (Element) mainList.item(0);
+			
+			NodeList list = root.getChildNodes();
+			
+			boolean deleted = false;
+						
+			for(int i = 0; i < list.getLength(); i++) {
+				Element el = (Element) list.item(i);
+				
+				if(deleted) {
+					int id = Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent());
+					el.getElementsByTagName("id").item(0).setTextContent(Integer.toString(id - 1));
+				}
+				
+				if(Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent()) == book.getId() && !deleted) {
+					root.removeChild(el);
+					deleted = true;
+					i--;
+				}
+				
+			}
+			
+			doc.getDocumentElement().normalize();
+			
+			DOMSource source = new DOMSource(doc);
+			
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			
+			StreamResult result = new StreamResult(new File("src/Books.xml"));
+			
+			transformer.transform(source, result);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	public static Node getBook(Document doc, int id, String title, String author, String genre, int pages, String description, int rating) {

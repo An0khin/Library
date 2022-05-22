@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -45,10 +46,13 @@ public class Library {
 			
 			JTextField titleField = new JTextField(curBook.getTitle());
 			JTextField authorField = new JTextField(curBook.getAuthor().getName());
+			JButton deleteButton = new JButton("Delete");
+			deleteButton.addActionListener(listeners.getDeleteActionListener());
 			
 			Object[] message = {
 				    "Title:", titleField,
-				    "Author:", authorField
+				    "Author:", authorField,
+				    deleteButton
 				};
 
 			int option = JOptionPane.showConfirmDialog(window, message, curBook.getTitle(), JOptionPane.INFORMATION_MESSAGE);
@@ -104,7 +108,22 @@ public class Library {
 				"Author:", curBook.getAuthor().getName()
 			};
 			
-			JOptionPane.showMessageDialog(null, message, curBook.getTitle(), JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(window, message, curBook.getTitle(), JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
+	public void deleteCurrent() {
+		if(window.hasSelected()) {
+			String title = window.getTitleValue();
+			
+			Book curBook = findBookById(getIdFromTitle(title));
+			
+			int option = JOptionPane.showConfirmDialog(window, "Do you wanna delete?");
+			
+			if(option == JOptionPane.OK_OPTION) {
+				creatorBooks.deleteBook(curBook);
+				updateList();
+			}
 		}
 	}
 }

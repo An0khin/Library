@@ -50,7 +50,7 @@ public class CreatorBooks {
 				booksList.set(i, book);
 			}
 		}
-		BuilderXML.editBook(book);
+		BuilderXML.editBookById(book, book.getId());
 	}
 	
 	public void addBook(Book book) {
@@ -60,8 +60,18 @@ public class CreatorBooks {
 		
 	public void deleteBook(Book book) {
 		//Deleting book and decrement id
-		//booksList.remove(book);
-		//BuilderXML.removeBook(book);
+		boolean deleted = false;
+		for(Book tmp : booksList) {
+			if(deleted) {
+				tmp.setId(tmp.getId() - 1);
+			}
+			if(book.getId() == tmp.getId() && !deleted) {
+				deleted = true;
+			}
+		}
+		booksList.remove(book);
+		BuilderXML.removeBook(book);
+		curId--;
 		
 	}
 }
