@@ -1,3 +1,4 @@
+package com.home.model;
 
 public enum Genres {
 	FANTASY("Fantasy"), ACTION("Action"), ADVENTURE("Adventure"), CLASSICS("Classics"),

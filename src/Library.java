@@ -13,7 +13,6 @@ public class Library {
 	private List<Author> authorsList = new ArrayList<>(); //Will be replaced by database
 	private List<Book> booksList = new ArrayList<>(); //Will be replaced by database
 	private LibraryWindow window;
-//	private BookWindow bookWindow;
 	private Listeners listeners;
 	private CreatorBooks creatorBooks;
 	
@@ -34,6 +33,10 @@ public class Library {
 		window.setButNewListener(listeners.getNewActionListener());
 		window.setButEditListener(listeners.getEditActionListener());
 		window.setMainListSelectionListener(listeners.getListSelectionListener());
+	}
+	
+	public void changeView(StateView state) {
+		stateView = state;
 	}
 	
 	public void editSelectBook() {
