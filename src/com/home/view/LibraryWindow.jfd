@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "6.0.6.0.190" Java: "1.8.0_172" encoding: "UTF-8"
+JFDML JFormDesigner: "6.0.6.0.190" Java: "1.8.0_291" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -15,15 +15,6 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "Center"
-			} )
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollPane2"
-				add( new FormComponent( "javax.swing.JTextArea" ) {
-					name: "infoArea"
-					"editable": false
-				} )
-			}, new FormLayoutConstraints( class java.lang.String ) {
-				"value": "East"
 			} )
 			add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
 				name: "splitPane1"
@@ -42,6 +33,14 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "South"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+				"axis": 1
+			} ) {
+				name: "bookReviewPanel"
+				"preferredSize": new java.awt.Dimension( 200, 0 )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "East"
 			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "menuBar1"
@@ -64,7 +63,7 @@ new FormModel {
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 365, 115 )
-			"size": new java.awt.Dimension( 415, 310 )
+			"size": new java.awt.Dimension( 460, 410 )
 		} )
 	}
 }

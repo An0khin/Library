@@ -64,12 +64,11 @@ public class LibraryWindow extends JFrame {
 		authorsMenu = new JMenuItem();
 		genresMenu = new JMenuItem();
 		scrollPane1 = new JScrollPane();
-		mainList = new JList<>();
-		scrollPane2 = new JScrollPane();
-		infoArea = new JTextArea();
+		mainList = new JList();
 		splitPane1 = new JSplitPane();
 		buttonNew = new JButton();
 		buttonEdit = new JButton();
+		panel1 = new JPanel();
 
 		//======== this ========
 		setTitle("Own Library");
@@ -107,15 +106,6 @@ public class LibraryWindow extends JFrame {
 		}
 		contentPane.add(scrollPane1, BorderLayout.CENTER);
 
-		//======== scrollPane2 ========
-		{
-
-			//---- infoArea ----
-			infoArea.setEditable(false);
-			scrollPane2.setViewportView(infoArea);
-		}
-		contentPane.add(scrollPane2, BorderLayout.EAST);
-
 		//======== splitPane1 ========
 		{
 			splitPane1.setResizeWeight(0.5);
@@ -129,6 +119,12 @@ public class LibraryWindow extends JFrame {
 			splitPane1.setRightComponent(buttonEdit);
 		}
 		contentPane.add(splitPane1, BorderLayout.SOUTH);
+
+		//======== panel1 ========
+		{
+			panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
+		}
+		contentPane.add(panel1, BorderLayout.EAST);
 		pack();
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -141,11 +137,10 @@ public class LibraryWindow extends JFrame {
 	private JMenuItem authorsMenu;
 	private JMenuItem genresMenu;
 	private JScrollPane scrollPane1;
-	private JList<String> mainList;
-	private JScrollPane scrollPane2;
-	private JTextArea infoArea;
+	private JList mainList;
 	private JSplitPane splitPane1;
 	private JButton buttonNew;
 	private JButton buttonEdit;
+	private JPanel panel1;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }
