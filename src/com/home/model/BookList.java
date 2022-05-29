@@ -26,4 +26,8 @@ public class BookList {
 		}
 		return tmpList;
 	}
+	
+	public void editBook(Book book) {
+		//
+	}
 }

@@ -13,11 +13,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.home.model.Book;
+
 public class XMLManager {
-	public static void buildCatalogue() {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
-		
+	DocumentBuilderFactory factory;
+	DocumentBuilder builder;
+	Transformer transformer;
+	File filePath;
+	
+	XMLManager(File directory) {
+		this.filePath = new File(directory + File.separator + "books.xml");
+		factory = DocumentBuilderFactory.newInstance();
+		buildCatalogue();
+	}
+	
+	private void buildCatalogue() {		
 		try {
 			builder = factory.newDocumentBuilder();
 			
@@ -30,9 +40,9 @@ public class XMLManager {
 			DOMSource source = new DOMSource(doc);
 			
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
+			transformer = transformerFactory.newTransformer();
 			
-			StreamResult file = new StreamResult(new File("src/Books.xml"));
+			StreamResult file = new StreamResult(filePath);
 			
 			transformer.transform(source, file);
 			
@@ -42,31 +52,31 @@ public class XMLManager {
 		}
 	}
 	
-	public static void addBook(Book book) {
-		String filePath = "src/Books.xml";
-		File file = new File(filePath);
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
+	public void addBook(Book book) {
+//		String filePath = "src/Books.xml";
+//		File file = new File(directory + File.separator + "Books.xml");
+//		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//		DocumentBuilder builder;
 		
 		try {
-			builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(file);
+//			builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(filePath);
 			doc.getDocumentElement().normalize();
 			
 			NodeList list = doc.getElementsByTagName("BookCatalogue");
 			Element root = (Element) list.item(0);
 			
-			root.appendChild(getBook(doc, book.getId(), book.getTitle(), book.getAuthor().getName(), book.getGenre().getName(),
+			root.appendChild(getBook(doc, book.getId(), book.getTitle(), book.getAuthor(), book.getGenre().getName(),
 					book.getPages(), book.getDescription(), book.getRating()));
 			
 			doc.getDocumentElement().normalize();
 			
 			DOMSource source = new DOMSource(doc);
 			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
+//			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//			Transformer transformer = transformerFactory.newTransformer();
 			
-			StreamResult result = new StreamResult(new File("src/Books.xml"));
+			StreamResult result = new StreamResult(filePath);
 			
 			transformer.transform(source, result);
 			
@@ -76,28 +86,30 @@ public class XMLManager {
 		}
 	}
 	
-	public static void editBookById(Book book, int id) {
-		String filePath = "src/Books.xml";
-		File file = new File(filePath);
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
-		
+	public  void editBook(Book book) {
+//		String filePath = "src/Books.xml";
+//		File file = new File(filePath);
+//		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//		DocumentBuilder builder;
+//		
 		try {
 			builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(file);
+			Document doc = builder.parse(filePath);
 			doc.getDocumentElement().normalize();
 						
 			NodeList mainList = doc.getElementsByTagName("BookCatalogue");
 			Element root = (Element) mainList.item(0);
 			
 			NodeList list = root.getChildNodes();
+			
+			int id = book.getId();
 						
 			for(int i = 0; i < list.getLength(); i++) {
 				Element el = (Element) list.item(i);
 				if(Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent()) == id) {
-					el.getElementsByTagName("id").item(0).setTextContent(Integer.toString(book.getId()));
+					el.getElementsByTagName("id").item(0).setTextContent(Integer.toString(id));
 					el.getElementsByTagName("title").item(0).setTextContent(book.getTitle());
-					el.getElementsByTagName("author").item(0).setTextContent(book.getAuthor().getName());
+					el.getElementsByTagName("author").item(0).setTextContent(book.getAuthor());
 					break;
 				}
 			}
@@ -106,10 +118,10 @@ public class XMLManager {
 			
 			DOMSource source = new DOMSource(doc);
 			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
+//			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//			Transformer transformer = transformerFactory.newTransformer();
 			
-			StreamResult result = new StreamResult(new File("src/Books.xml"));
+			StreamResult result = new StreamResult(filePath);
 			
 			transformer.transform(source, result);
 		} catch(Exception ex) {
@@ -141,14 +153,13 @@ public class XMLManager {
 				if(deleted) {
 					int id = Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent());
 					el.getElementsByTagName("id").item(0).setTextContent(Integer.toString(id - 1));
-				}
-				
-				if(Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent()) == book.getId() && !deleted) {
-					root.removeChild(el);
-					deleted = true;
-					i--;
-				}
-				
+				} else {
+					if(Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent()) == book.getId()) {
+						root.removeChild(el);
+						deleted = true;
+						i--;
+					}
+				}				
 			}
 			
 			doc.getDocumentElement().normalize();
@@ -166,7 +177,7 @@ public class XMLManager {
 		}
 	}
 	
-	public static Node getBook(Document doc, int id, String title, String author, String genre, int pages, String description, int rating) {
+	private static Node getBook(Document doc, int id, String title, String author, String genre, int pages, String description, int rating) {
 		Element book = doc.createElement("Book");
 		
 		book.appendChild(getElement(doc, "id", String.valueOf(id)));
@@ -180,7 +191,7 @@ public class XMLManager {
 		return book;
 	}
 	
-	public static Element getElement(Document doc, String name, String value) {
+	private static Element getElement(Document doc, String name, String value) {
 		Element node = doc.createElement(name);
 		node.appendChild(doc.createTextNode(value));
 		return node;

@@ -5,8 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -48,7 +46,14 @@ public class LibraryWindow extends JFrame implements Observer{
 		JTextField authorField = new JTextField("Author: " + book.getAuthor());
 		JTextField genresField = new JTextField("Genre: " + book.getGenre().getName());
 		JTextField pagesField = new JTextField("Pages: " + book.getPages());
-		JTextArea descriptionField = new JTextArea("Description: " + book.getDescription());
+		
+		JTextArea descriptionField = new JTextArea("Description: " + book.getDescription(), 5, 5);
+		descriptionField.setEditable(false);
+		JScrollPane description = new JScrollPane(descriptionField);
+		description.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		description.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		description.setAutoscrolls(true);
+		
 		JTextField ratingField = new JTextField("Rating: " + book.getRating());
 					
 		Object[] message = {
@@ -57,7 +62,6 @@ public class LibraryWindow extends JFrame implements Observer{
 				authorField,
 				genresField,
 				pagesField,
-				descriptionField,
 				ratingField
 		};
 		
@@ -67,6 +71,9 @@ public class LibraryWindow extends JFrame implements Observer{
 			comp.setEditable(false);
 			bookReviewPanel.add(comp);
 		}
+		
+		bookReviewPanel.add(description);
+		
 		this.validate();
 	}
 	
@@ -78,43 +85,87 @@ public class LibraryWindow extends JFrame implements Observer{
 			JTextField authorField = new JTextField();
 			JComboBox<Genres> genresField = new JComboBox<>(Genres.values());
 			JTextField pagesField = new JTextField();
-			JTextArea descriptionField = new JTextArea();
+			
+			JTextArea descriptionField = new JTextArea(5, 5);
+			JScrollPane description = new JScrollPane(descriptionField);
+			description.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			description.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			description.setAutoscrolls(true);
 			
 			Integer[] rating = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-			JComboBox<Integer> ratingField = new JComboBox(rating);
+			JComboBox<Integer> ratingField = new JComboBox<>(rating);
 						
 			Object[] message = {
 			    "Title:", usernameField,
 			    "Author:", authorField,
 			    "Genres:", genresField,
 			    "Pages:", pagesField,
-			    "Description:", descriptionField,
-			    "Rating:", ratingField
+			    "Rating:", ratingField,
+			    "Description:", description
 			};
 
-			int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 			if (option == JOptionPane.OK_OPTION) {
 			    // Creating book by books' creator
 				Book book = BookManager.createBook(usernameField.getText(), authorField.getText(),(Genres) genresField.getSelectedItem(), 
-						Integer.parseInt(pagesField.getText()), descriptionField.getText(), (int) ratingField.getSelectedItem());
+						Integer.parseInt(pagesField.getText()), (int) ratingField.getSelectedItem(), descriptionField.getText());
 				library.addBook(book);
 			}
-			// Move arguments from window to books' creator and later move it to library.newBook()
 		}
 	}
 	
 	private class EditListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
+			if(!mainList.isSelectionEmpty()) {
+				int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
+				Book currentBook = library.getBookById(bookId);
+				
+				JTextField usernameField = new JTextField(currentBook.getTitle());
+				JTextField authorField = new JTextField(currentBook.getAuthor());
+				JComboBox<Genres> genresField = new JComboBox<>(Genres.values());
+				genresField.setSelectedItem(currentBook.getGenre());
+				JTextField pagesField = new JTextField(Integer.toString(currentBook.getPages()));
+				
+				JTextArea descriptionField = new JTextArea(currentBook.getDescription(), 5, 5);
+				JScrollPane description = new JScrollPane(descriptionField);
+				description.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				description.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+				description.setAutoscrolls(true);
+				
+				Integer[] rating = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+				JComboBox<Integer> ratingField = new JComboBox<>(rating);
+				ratingField.setSelectedItem(currentBook.getRating());
+							
+				Object[] message = {
+				    "Title:", usernameField,
+				    "Author:", authorField,
+				    "Genres:", genresField,
+				    "Pages:", pagesField,
+				    "Rating:", ratingField,
+				    "Description:", description
+				};
+
+				int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+				if (option == JOptionPane.OK_OPTION) {
+				    // Creating book by books' creator
+					currentBook.setTitle(usernameField.getText());
+					currentBook.setAuthor(authorField.getText());
+					currentBook.setGenre((Genres) genresField.getSelectedItem());
+					currentBook.setPages(Integer.parseInt(pagesField.getText()));
+					currentBook.setRating((int) ratingField.getSelectedItem());
+					currentBook.setDescription(descriptionField.getText());
+				}
+				
+				library.editBook(currentBook);
+			}
 		}
 	}
 	
 	private class CheckerClicks extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			JList list = (JList) e.getSource();
+			JList<String> list = (JList<String>) e.getSource();
 			if(e.getClickCount() == 2 && !list.isSelectionEmpty()) {
 				String record = (String) list.getSelectedValue();
 				//library.printBook(BookManager.getIdFromRecord(record));
@@ -133,7 +184,7 @@ public class LibraryWindow extends JFrame implements Observer{
 		authorsMenu = new JMenuItem();
 		genresMenu = new JMenuItem();
 		scrollPane1 = new JScrollPane();
-		mainList = new JList();
+		mainList = new JList<String>();
 		splitPane1 = new JSplitPane();
 		buttonNew = new JButton();
 		buttonEdit = new JButton();
@@ -191,11 +242,12 @@ public class LibraryWindow extends JFrame implements Observer{
 
 		//======== bookReviewPanel ========
 		{
-			bookReviewPanel.setPreferredSize(new Dimension(200, 0));
+			bookReviewPanel.setPreferredSize(new Dimension(250, 0));
+			bookReviewPanel.setMinimumSize(new Dimension(150, 0));
 			bookReviewPanel.setLayout(new BoxLayout(bookReviewPanel, BoxLayout.Y_AXIS));
 		}
 		contentPane.add(bookReviewPanel, BorderLayout.EAST);
-		pack();
+		setSize(460, 410);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 		
@@ -211,7 +263,7 @@ public class LibraryWindow extends JFrame implements Observer{
 	private JMenuItem authorsMenu;
 	private JMenuItem genresMenu;
 	private JScrollPane scrollPane1;
-	private JList mainList;
+	private JList<String> mainList;
 	private JSplitPane splitPane1;
 	private JButton buttonNew;
 	private JButton buttonEdit;

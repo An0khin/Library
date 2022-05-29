@@ -8,6 +8,7 @@ new FormModel {
 			"title": "Own Library"
 			"defaultCloseOperation": 3
 			"visible": true
+			"$sizePolicy": 1
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
 				add( new FormComponent( "javax.swing.JList" ) {
@@ -38,7 +39,8 @@ new FormModel {
 				"axis": 1
 			} ) {
 				name: "bookReviewPanel"
-				"preferredSize": new java.awt.Dimension( 200, 0 )
+				"preferredSize": new java.awt.Dimension( 250, 0 )
+				"minimumSize": new java.awt.Dimension( 150, 0 )
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "East"
 			} )
