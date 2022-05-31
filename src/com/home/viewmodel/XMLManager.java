@@ -45,8 +45,7 @@ public class XMLManager {
 			StreamResult file = new StreamResult(filePath);
 			
 			transformer.transform(source, file);
-			
-			//System.out.println("XML is created");
+
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -86,12 +85,7 @@ public class XMLManager {
 		}
 	}
 	
-	public  void editBook(Book book) {
-//		String filePath = "src/Books.xml";
-//		File file = new File(filePath);
-//		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//		DocumentBuilder builder;
-//		
+	public void editBook(Book book) {
 		try {
 			builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(filePath);
@@ -117,10 +111,7 @@ public class XMLManager {
 			doc.getDocumentElement().normalize();
 			
 			DOMSource source = new DOMSource(doc);
-			
-//			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//			Transformer transformer = transformerFactory.newTransformer();
-			
+						
 			StreamResult result = new StreamResult(filePath);
 			
 			transformer.transform(source, result);
@@ -129,15 +120,10 @@ public class XMLManager {
 		}
 	}
 	
-	public static void removeBook(Book book) {
-		String filePath = "src/Books.xml";
-		File file = new File(filePath);
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
-		
+	public void removeBook(Book book) {		
 		try {
 			builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(file);
+			Document doc = builder.parse(filePath);
 			doc.getDocumentElement().normalize();
 						
 			NodeList mainList = doc.getElementsByTagName("BookCatalogue");
@@ -166,10 +152,7 @@ public class XMLManager {
 			
 			DOMSource source = new DOMSource(doc);
 			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			
-			StreamResult result = new StreamResult(new File("src/Books.xml"));
+			StreamResult result = new StreamResult(filePath);
 			
 			transformer.transform(source, result);
 		} catch(Exception ex) {

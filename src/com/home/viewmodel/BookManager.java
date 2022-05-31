@@ -15,4 +15,8 @@ public class BookManager {
 	public static int getIdFromRecord(String record) {
 		return Integer.parseInt(record.substring(0, record.indexOf(" ")));
 	}
+	
+	public static void getDeleted() {
+		curId--;
+	}
 }

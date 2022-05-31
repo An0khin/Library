@@ -17,24 +17,6 @@ new FormModel {
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "Center"
 			} )
-			add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
-				name: "splitPane1"
-				"resizeWeight": 0.5
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "buttonNew"
-					"text": "NEW"
-				}, new FormLayoutConstraints( class java.lang.String ) {
-					"value": "left"
-				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "buttonEdit"
-					"text": "EDIT"
-				}, new FormLayoutConstraints( class java.lang.String ) {
-					"value": "right"
-				} )
-			}, new FormLayoutConstraints( class java.lang.String ) {
-				"value": "South"
-			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
 				"axis": 1
 			} ) {
@@ -43,6 +25,31 @@ new FormModel {
 				"minimumSize": new java.awt.Dimension( 150, 0 )
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "East"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) ) {
+				name: "buttonsPanel"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonNew"
+					"text": "NEW"
+					"minimumSize": new java.awt.Dimension( 39, 25 )
+					"preferredSize": new java.awt.Dimension( 153, 25 )
+					"iconTextGap": 6
+					"maximumSize": new java.awt.Dimension( 1920, 100 )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonEdit"
+					"text": "EDIT"
+					"maximumSize": new java.awt.Dimension( 1920, 100 )
+					"preferredSize": new java.awt.Dimension( 153, 25 )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonDelete"
+					"text": "DELETE"
+					"maximumSize": new java.awt.Dimension( 1920, 100 )
+					"preferredSize": new java.awt.Dimension( 153, 25 )
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "South"
 			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "menuBar1"

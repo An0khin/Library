@@ -3,6 +3,8 @@ package com.home.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.home.viewmodel.BookManager;
+
 public class BookList {
 	List<Book> books = new ArrayList<>();
 	
@@ -29,5 +31,23 @@ public class BookList {
 	
 	public void editBook(Book book) {
 		//
+	}
+	
+	public void removeBook(Book book) {
+		BookManager.getDeleted();
+		
+		boolean findForDel = false;
+		
+		for(Book tmpBook : books) {
+			if(findForDel) {
+				tmpBook.setId(tmpBook.getId() - 1);
+			} else {
+				if(tmpBook.getId() == book.getId()) {
+					findForDel = true;
+				}
+			}
+		}
+		
+		books.remove(book);
 	}
 }

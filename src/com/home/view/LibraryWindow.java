@@ -37,6 +37,9 @@ public class LibraryWindow extends JFrame implements Observer{
 	public void update(Observable o, Object arg) {
 		//Library libr = (Library) o;
 		mainList.setListData(library.getList().toArray(new String[0]));
+		
+		bookReviewPanel.removeAll();
+		bookReviewPanel.updateUI();
 	}
 	
 	public void viewBook(Book book) {
@@ -77,7 +80,17 @@ public class LibraryWindow extends JFrame implements Observer{
 		this.validate();
 	}
 	
-	private class NewListener implements ActionListener{
+	private class DeleteListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
+			Book currentBook = library.getBookById(bookId);
+			
+			library.removeBook(currentBook);
+		}
+	}
+	
+	private class NewListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Show window with input areas
@@ -165,9 +178,9 @@ public class LibraryWindow extends JFrame implements Observer{
 	private class CheckerClicks extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			JList<String> list = (JList<String>) e.getSource();
-			if(e.getClickCount() == 2 && !list.isSelectionEmpty()) {
-				String record = (String) list.getSelectedValue();
+//			JList<String> list = (JList<String>) e.getSource();
+			if(e.getClickCount() == 2 && !mainList.isSelectionEmpty()) {
+				String record = (String) mainList.getSelectedValue();
 				//library.printBook(BookManager.getIdFromRecord(record));
 				viewBook(library.getBookById(BookManager.getIdFromRecord(record)));
 			}
@@ -184,11 +197,12 @@ public class LibraryWindow extends JFrame implements Observer{
 		authorsMenu = new JMenuItem();
 		genresMenu = new JMenuItem();
 		scrollPane1 = new JScrollPane();
-		mainList = new JList<String>();
-		splitPane1 = new JSplitPane();
+		mainList = new JList<>();
+		bookReviewPanel = new JPanel();
+		buttonsPanel = new JPanel();
 		buttonNew = new JButton();
 		buttonEdit = new JButton();
-		bookReviewPanel = new JPanel();
+		buttonDelete = new JButton();
 
 		//======== this ========
 		setTitle("Own Library");
@@ -226,20 +240,6 @@ public class LibraryWindow extends JFrame implements Observer{
 		}
 		contentPane.add(scrollPane1, BorderLayout.CENTER);
 
-		//======== splitPane1 ========
-		{
-			splitPane1.setResizeWeight(0.5);
-
-			//---- buttonNew ----
-			buttonNew.setText("NEW");
-			splitPane1.setLeftComponent(buttonNew);
-
-			//---- buttonEdit ----
-			buttonEdit.setText("EDIT");
-			splitPane1.setRightComponent(buttonEdit);
-		}
-		contentPane.add(splitPane1, BorderLayout.SOUTH);
-
 		//======== bookReviewPanel ========
 		{
 			bookReviewPanel.setPreferredSize(new Dimension(250, 0));
@@ -247,6 +247,32 @@ public class LibraryWindow extends JFrame implements Observer{
 			bookReviewPanel.setLayout(new BoxLayout(bookReviewPanel, BoxLayout.Y_AXIS));
 		}
 		contentPane.add(bookReviewPanel, BorderLayout.EAST);
+
+		//======== buttonsPanel ========
+		{
+			buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+
+			//---- buttonNew ----
+			buttonNew.setText("NEW");
+			buttonNew.setMinimumSize(new Dimension(39, 25));
+			buttonNew.setPreferredSize(new Dimension(153, 25));
+			buttonNew.setIconTextGap(6);
+			buttonNew.setMaximumSize(new Dimension(1920, 100));
+			buttonsPanel.add(buttonNew);
+
+			//---- buttonEdit ----
+			buttonEdit.setText("EDIT");
+			buttonEdit.setMaximumSize(new Dimension(1920, 100));
+			buttonEdit.setPreferredSize(new Dimension(153, 25));
+			buttonsPanel.add(buttonEdit);
+
+			//---- buttonDelete ----
+			buttonDelete.setText("DELETE");
+			buttonDelete.setMaximumSize(new Dimension(1920, 100));
+			buttonDelete.setPreferredSize(new Dimension(153, 25));
+			buttonsPanel.add(buttonDelete);
+		}
+		contentPane.add(buttonsPanel, BorderLayout.SOUTH);
 		setSize(460, 410);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -254,6 +280,7 @@ public class LibraryWindow extends JFrame implements Observer{
 		mainList.addMouseListener(new CheckerClicks());
 		buttonNew.addActionListener(new NewListener());
 		buttonEdit.addActionListener(new EditListener());
+		buttonDelete.addActionListener(new DeleteListener());
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
@@ -264,9 +291,10 @@ public class LibraryWindow extends JFrame implements Observer{
 	private JMenuItem genresMenu;
 	private JScrollPane scrollPane1;
 	private JList<String> mainList;
-	private JSplitPane splitPane1;
+	private JPanel bookReviewPanel;
+	private JPanel buttonsPanel;
 	private JButton buttonNew;
 	private JButton buttonEdit;
-	private JPanel bookReviewPanel;
+	private JButton buttonDelete;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

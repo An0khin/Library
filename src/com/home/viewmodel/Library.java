@@ -47,4 +47,10 @@ public class Library extends Observable{
 	public Book getBookById(int id) {
 		return books.getBookById(id);
 	}
+	
+	public void removeBook(Book book) {
+		books.removeBook(book);
+		xmlManager.removeBook(book);
+		change();
+	}
 }
