@@ -24,28 +24,33 @@ public class XMLManager {
 	XMLManager(File directory) {
 		this.filePath = new File(directory + File.separator + "books.xml");
 		factory = DocumentBuilderFactory.newInstance();
+		
 		buildCatalogue();
 	}
 	
 	private void buildCatalogue() {		
 		try {
-			builder = factory.newDocumentBuilder();
-			
-			Document doc = builder.newDocument();
-			
-			Element root = doc.createElement("BookCatalogue");
-			
-			doc.appendChild(root);
-			
-			DOMSource source = new DOMSource(doc);
-			
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			transformer = transformerFactory.newTransformer();
+			builder = factory.newDocumentBuilder();
 			
-			StreamResult file = new StreamResult(filePath);
-			
-			transformer.transform(source, file);
-
+			if(filePath.exists()) {
+				System.out.println("XML is parsed");
+			} else {
+				Document doc = builder.newDocument();
+				
+				Element root = doc.createElement("BookCatalogue");
+				
+				doc.appendChild(root);
+				
+				DOMSource source = new DOMSource(doc);
+								
+				StreamResult file = new StreamResult(filePath);
+				
+				transformer.transform(source, file);
+				
+				System.out.println("XML is created");
+			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
