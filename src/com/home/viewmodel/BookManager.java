@@ -36,6 +36,11 @@ public class BookManager {
 		return resBook;
 	}
 	
+	public static Book createBook(int id, String title, String author, Genres genre, int pages, int rate, String description, File address) {
+		Book book = new Book(id, title, author, genre, pages, description, rate, address);
+		return book;
+	}
+	
 	public static int getIdFromRecord(String record) {
 		return Integer.parseInt(record.substring(0, record.indexOf(" ")));
 	}

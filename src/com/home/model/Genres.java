@@ -15,4 +15,13 @@ public enum Genres {
 	public String getName() {
 		return name;
 	}
+	
+	public static Genres findByName(String name) {
+		for(Genres genre : Genres.values()) {
+			if(genre.getName().equals(name)) {
+				return genre;
+			}
+		}
+		return null;
+	}
 }

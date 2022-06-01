@@ -1,5 +1,7 @@
 package com.home.viewmodel;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,6 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.home.model.Book;
+import com.home.model.Genres;
 
 public class XMLManager {
 	DocumentBuilderFactory factory;
@@ -54,6 +57,42 @@ public class XMLManager {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	public List<Book> getList() {
+		List<Book> listBooks = new ArrayList<Book>();
+		
+		try {
+			builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(filePath);
+			doc.getDocumentElement().normalize();
+						
+			NodeList mainList = doc.getElementsByTagName("BookCatalogue");
+			Element root = (Element) mainList.item(0);
+			
+			NodeList list = root.getChildNodes();
+			
+			int id, pages, rating;
+			String title, author, description;
+			Genres genre;
+									
+			for(int i = 0; i < list.getLength(); i++) {
+				Element el = (Element) list.item(i);
+				id = Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent());
+				title = el.getElementsByTagName("title").item(0).getTextContent();
+				author = el.getElementsByTagName("author").item(0).getTextContent();
+				genre = Genres.findByName(el.getElementsByTagName("genre").item(0).getTextContent());
+				pages = Integer.parseInt(el.getElementsByTagName("pages").item(0).getTextContent());
+				description = el.getElementsByTagName("description").item(0).getTextContent();
+				rating = Integer.parseInt(el.getElementsByTagName("rating").item(0).getTextContent());
+				listBooks.add(BookManager.createBook(id, title, author, genre, pages, rating, description, null));
+//				el.getElementsByTagName("address").item(0).setTextContent(book.getAuthor());
+			}
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return listBooks;
 	}
 	
 	public void addBook(Book book) {

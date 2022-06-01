@@ -12,6 +12,10 @@ public class BookList {
 		books.add(book);
 	}
 	
+	public void addAll(List<Book> list) {
+		books.addAll(list);
+	}
+	
 	public Book getBookById(int id) {
 		for(Book book : books) {
 			if(book.getId() == id) {

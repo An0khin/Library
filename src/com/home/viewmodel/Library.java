@@ -20,6 +20,7 @@ public class Library extends Observable{
 	
 	public void setModel(BookList books) {
 		this.books = books;
+		this.books.addAll(xmlManager.getList());
 		change();
 	}
 	
