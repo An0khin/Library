@@ -109,6 +109,11 @@ public class XMLManager {
 					el.getElementsByTagName("id").item(0).setTextContent(Integer.toString(id));
 					el.getElementsByTagName("title").item(0).setTextContent(book.getTitle());
 					el.getElementsByTagName("author").item(0).setTextContent(book.getAuthor());
+					el.getElementsByTagName("genre").item(0).setTextContent(book.getGenre().getName());
+					el.getElementsByTagName("pages").item(0).setTextContent(Integer.toString(book.getPages()));
+					el.getElementsByTagName("description").item(0).setTextContent(book.getDescription());
+					el.getElementsByTagName("rating").item(0).setTextContent(Integer.toString(book.getRating()));
+//					el.getElementsByTagName("address").item(0).setTextContent(book.getAuthor());
 					break;
 				}
 			}

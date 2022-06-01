@@ -38,9 +38,9 @@ public class Library extends Observable{
 		change();
 	}
 	
-	public void editBook(Book book) {
-		books.editBook(book);
-		xmlManager.editBook(book);
+	public void editBook(Book book, Book toBook) {
+		books.editBook(book, toBook);
+		xmlManager.editBook(toBook);
 		change();
 	}
 	

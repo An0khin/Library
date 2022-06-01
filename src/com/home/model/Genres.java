@@ -1,10 +1,10 @@
 package com.home.model;
 
 public enum Genres {
-	FANTASY("Fantasy"), ACTION("Action"), ADVENTURE("Adventure"), CLASSICS("Classics"),
+	NULL(""), FANTASY("Fantasy"), ACTION("Action"), ADVENTURE("Adventure"), CLASSICS("Classics"),
 	COMIC("Comic"), DETECTIVE("Detective"), MYSTERY("Mystery"), HISTORICAL("Historical Fiction"),
 	HORROR("Horror"), LITERARY("Literary Fiction"), ROMANCE("Romance"), SCIENCE("Science Fiction"),
-	SHORT("Short Stories"), THRILLERS("Thrillers"), POETRY("Poetry"), NULL("");
+	SHORT("Short Stories"), THRILLERS("Thrillers"), POETRY("Poetry");
 	
 	private String name;
 

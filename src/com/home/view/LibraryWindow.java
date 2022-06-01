@@ -118,10 +118,11 @@ public class LibraryWindow extends JFrame implements Observer{
 			};
 
 			int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-			if (option == JOptionPane.OK_OPTION) {
+			
+			if(option == JOptionPane.OK_OPTION) {
 			    // Creating book by books' creator
 				Book book = BookManager.createBook(usernameField.getText(), authorField.getText(),(Genres) genresField.getSelectedItem(), 
-						Integer.parseInt(pagesField.getText()), (int) ratingField.getSelectedItem(), descriptionField.getText());
+						pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), null); //Need use address to file
 				library.addBook(book);
 			}
 		}
@@ -162,15 +163,17 @@ public class LibraryWindow extends JFrame implements Observer{
 				int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 				if (option == JOptionPane.OK_OPTION) {
 				    // Creating book by books' creator
-					currentBook.setTitle(usernameField.getText());
-					currentBook.setAuthor(authorField.getText());
-					currentBook.setGenre((Genres) genresField.getSelectedItem());
-					currentBook.setPages(Integer.parseInt(pagesField.getText()));
-					currentBook.setRating((int) ratingField.getSelectedItem());
-					currentBook.setDescription(descriptionField.getText());
+					Book newBook = BookManager.createBookForReplace(currentBook, usernameField.getText(), authorField.getText(), (Genres) genresField.getSelectedItem(),
+							pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), null);
+//					currentBook.setTitle(usernameField.getText());
+//					currentBook.setAuthor(authorField.getText());
+//					currentBook.setGenre((Genres) genresField.getSelectedItem());
+//					currentBook.setPages(Integer.parseInt(pagesField.getText()));
+//					currentBook.setRating((int) ratingField.getSelectedItem());
+//					currentBook.setDescription(descriptionField.getText());
+					
+					library.editBook(currentBook, newBook);
 				}
-				
-				library.editBook(currentBook);
 			}
 		}
 	}

@@ -29,8 +29,17 @@ public class BookList {
 		return tmpList;
 	}
 	
-	public void editBook(Book book) {
-		//
+	public void editBook(Book book, Book toBook) {
+		int index = -1;
+		for(int i = 0; i < books.size(); i++) {
+			if(books.get(i).getId() == book.getId()) {
+				index = i;
+				break;
+			}
+		}
+		if(index != -1) {
+			books.set(index, toBook);
+		}
 	}
 	
 	public void removeBook(Book book) {

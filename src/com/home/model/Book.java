@@ -1,5 +1,7 @@
 package com.home.model;
 
+import java.io.File;
+
 public class Book{
 	private int id;
 	private String title;
@@ -8,8 +10,9 @@ public class Book{
 	private int pages;
 	private String description;
 	private int rating;
+	private File address;
 	
-	public Book(int id, String title, String author, Genres genre, int pages, String description, int rating) {
+	public Book(int id, String title, String author, Genres genre, int pages, String description, int rating, File address) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -18,6 +21,7 @@ public class Book{
 		this.pages = pages;
 		this.description = description;
 		this.rating = rating;
+		this.address = address;
 	}
 	
 	//Getters and Setters	
@@ -73,5 +77,13 @@ public class Book{
 	
 	public void setGenre(Genres genre) {
 		this.genre = genre;
-	}		
+	}
+	
+	public File getFile() {
+		return address;
+	}
+	
+	public void setFile(File address) {
+		this.address = address;
+	}
 }
