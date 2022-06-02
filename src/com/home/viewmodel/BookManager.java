@@ -48,4 +48,12 @@ public class BookManager {
 	public static void getDeleted() {
 		curId--;
 	}
+	
+	public static String getAddress(File file) {
+		String adr = "";
+		if(file != null) {
+			adr = file.getAbsolutePath();
+		}
+		return adr;
+	}
 }

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -44,6 +45,7 @@ public class LibraryWindow extends JFrame implements Observer{
 	
 	public void viewBook(Book book) {
 		bookReviewPanel.removeAll();
+		bookReviewPanel.updateUI();
 		JTextField idField = new JTextField("Id: " + book.getId());
 		JTextField usernameField = new JTextField("Title: " + book.getTitle());
 		JTextField authorField = new JTextField("Author: " + book.getAuthor());
@@ -58,35 +60,64 @@ public class LibraryWindow extends JFrame implements Observer{
 		description.setAutoscrolls(true);
 		
 		JTextField ratingField = new JTextField("Rating: " + book.getRating());
+		
+		JButton viewButton = new JButton("VIEW");
+		viewButton.addActionListener(new ViewListener());
+		
+		JTextField nameFile = new JTextField("File: " + BookManager.getAddress(book.getFile()));
+		nameFile.setEditable(false);
 					
-		Object[] message = {
+		JTextComponent[] message = {
 				idField,
 				usernameField,
 				authorField,
 				genresField,
 				pagesField,
-				ratingField
+				ratingField,
 		};
 		
-		for(Object obj : message) {
-			JTextComponent comp = (JTextComponent) obj;
+		for(JTextComponent comp : message) {
 			//comp.setEnabled(false);
 			comp.setEditable(false);
 			bookReviewPanel.add(comp);
 		}
 		
 		bookReviewPanel.add(description);
+		bookReviewPanel.add(nameFile);
+		if(nameFile.getText().length() > 6)
+			bookReviewPanel.add(viewButton);
 		
 		this.validate();
+	}
+	
+	private class ViewListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String record = mainList.getSelectedValue();
+			Book book = library.getBookById(BookManager.getIdFromRecord(record));
+			
+			try {
+				Desktop.getDesktop().open(book.getFile());
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			
+		}
 	}
 	
 	private class DeleteListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
-			Book currentBook = library.getBookById(bookId);
 			
-			library.removeBook(currentBook);
+			int option = JOptionPane.showConfirmDialog(null, "You really wanna delete?");
+			if(option == JOptionPane.OK_OPTION) {
+				if(!mainList.isSelectionEmpty())  {
+					int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
+					Book currentBook = library.getBookById(bookId);
+					
+					library.removeBook(currentBook);
+				}
+			}
 		}
 	}
 	
@@ -107,23 +138,65 @@ public class LibraryWindow extends JFrame implements Observer{
 			
 			Integer[] rating = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 			JComboBox<Integer> ratingField = new JComboBox<>(rating);
-						
+			
+			
+			JLabel selectText = new JLabel();
+			FileListener listener = new FileListener(selectText, null);
+			JButton button = new JButton("SELECT FILE: ");
+			button.addActionListener(listener);
+									
 			Object[] message = {
 			    "Title:", usernameField,
 			    "Author:", authorField,
 			    "Genres:", genresField,
 			    "Pages:", pagesField,
 			    "Rating:", ratingField,
-			    "Description:", description
+			    "Description:", description,
+			    button, selectText
 			};
 
 			int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 			
 			if(option == JOptionPane.OK_OPTION) {
 			    // Creating book by books' creator
+				
+				File file = listener.getSelected();
+				
 				Book book = BookManager.createBook(usernameField.getText(), authorField.getText(),(Genres) genresField.getSelectedItem(), 
-						pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), null); //Need use address to file
+						pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), file); //Need use address to file
 				library.addBook(book);
+			}
+		}
+	}
+	
+	private class FileListener implements ActionListener {
+		File file;
+		JLabel text;
+		
+		FileListener(JLabel text, File file) {
+			this.file = file;
+			this.text = text;
+			updateText();
+		}
+		
+		private void updateText() {
+			if(file != null) {
+				text.setText("Selected: " + file.getName());
+			}
+		}
+		
+		public File getSelected() {
+			return file;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
+			int option = fileChooser.showOpenDialog(null);
+			
+			if(option == JFileChooser.APPROVE_OPTION) {
+				file = fileChooser.getSelectedFile();
+				updateText();
 			}
 		}
 	}
@@ -150,6 +223,11 @@ public class LibraryWindow extends JFrame implements Observer{
 				Integer[] rating = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 				JComboBox<Integer> ratingField = new JComboBox<>(rating);
 				ratingField.setSelectedItem(currentBook.getRating());
+				
+				JLabel selectText = new JLabel();
+				FileListener listener = new FileListener(selectText, currentBook.getFile());
+				JButton button = new JButton("SELECT FILE: ");
+				button.addActionListener(listener);
 							
 				Object[] message = {
 				    "Title:", usernameField,
@@ -157,14 +235,16 @@ public class LibraryWindow extends JFrame implements Observer{
 				    "Genres:", genresField,
 				    "Pages:", pagesField,
 				    "Rating:", ratingField,
-				    "Description:", description
+				    "Description:", description,
+				    button, selectText
 				};
 
 				int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 				if (option == JOptionPane.OK_OPTION) {
 				    // Creating book by books' creator
+										
 					Book newBook = BookManager.createBookForReplace(currentBook, usernameField.getText(), authorField.getText(), (Genres) genresField.getSelectedItem(),
-							pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), null);
+							pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), listener.getSelected());
 //					currentBook.setTitle(usernameField.getText());
 //					currentBook.setAuthor(authorField.getText());
 //					currentBook.setGenre((Genres) genresField.getSelectedItem());
@@ -183,7 +263,7 @@ public class LibraryWindow extends JFrame implements Observer{
 		public void mouseClicked(MouseEvent e) {
 //			JList<String> list = (JList<String>) e.getSource();
 			if(e.getClickCount() == 2 && !mainList.isSelectionEmpty()) {
-				String record = (String) mainList.getSelectedValue();
+				String record = mainList.getSelectedValue();
 				//library.printBook(BookManager.getIdFromRecord(record));
 				viewBook(library.getBookById(BookManager.getIdFromRecord(record)));
 			}
