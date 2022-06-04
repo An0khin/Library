@@ -16,7 +16,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.home.model.Book;
-import com.home.model.Genres;
 
 public class XMLManager {
 	DocumentBuilderFactory factory;
@@ -72,17 +71,15 @@ public class XMLManager {
 			
 			NodeList list = root.getChildNodes();
 			
-			int id, rating;
-			String title, author, description, pages;
-			Genres genre;
+			int rating;
+			String title, author, description, pages, genre;
 			File address;
 									
 			for(int i = 0; i < list.getLength(); i++) {
 				Element el = (Element) list.item(i);
-				id = Integer.parseInt(el.getElementsByTagName("id").item(0).getTextContent());
 				title = el.getElementsByTagName("title").item(0).getTextContent();
 				author = el.getElementsByTagName("author").item(0).getTextContent();
-				genre = Genres.findByName(el.getElementsByTagName("genre").item(0).getTextContent());
+				genre = el.getElementsByTagName("genre").item(0).getTextContent();
 				pages = el.getElementsByTagName("pages").item(0).getTextContent();
 				description = el.getElementsByTagName("description").item(0).getTextContent();
 				rating = Integer.parseInt(el.getElementsByTagName("rating").item(0).getTextContent());
@@ -117,7 +114,7 @@ public class XMLManager {
 			NodeList list = doc.getElementsByTagName("BookCatalogue");
 			Element root = (Element) list.item(0);
 			
-			root.appendChild(getBook(doc, book.getId(), book.getTitle(), book.getAuthor(), book.getGenre().getName(),
+			root.appendChild(getBook(doc, book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(),
 					book.getPages(), book.getDescription(), book.getRating(), book.getFile()));
 			
 			doc.getDocumentElement().normalize();
@@ -156,7 +153,7 @@ public class XMLManager {
 					el.getElementsByTagName("id").item(0).setTextContent(Integer.toString(id));
 					el.getElementsByTagName("title").item(0).setTextContent(book.getTitle());
 					el.getElementsByTagName("author").item(0).setTextContent(book.getAuthor());
-					el.getElementsByTagName("genre").item(0).setTextContent(book.getGenre().getName());
+					el.getElementsByTagName("genre").item(0).setTextContent(book.getGenre());
 					el.getElementsByTagName("pages").item(0).setTextContent(Integer.toString(book.getPages()));
 					el.getElementsByTagName("description").item(0).setTextContent(book.getDescription());
 					el.getElementsByTagName("rating").item(0).setTextContent(Integer.toString(book.getRating()));

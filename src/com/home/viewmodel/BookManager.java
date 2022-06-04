@@ -3,12 +3,11 @@ package com.home.viewmodel;
 import java.io.File;
 
 import com.home.model.Book;
-import com.home.model.Genres;
 
 public class BookManager {
 	static int curId = 0;
 	
-	public static Book createBook(String title, String author, Genres genre, String pages, int rate, String description, File address) {
+	public static Book createBook(String title, String author, String genre, String pages, int rate, String description, File address) {
 		int pagesInt = 0;
 		
 		try {
@@ -22,7 +21,7 @@ public class BookManager {
 		return book;
 	}
 	
-	public static Book createBookForReplace(Book book, String title, String author, Genres genre, String pages, int rate, String description, File address) {
+	public static Book createBookForReplace(Book book, String title, String author, String genre, String pages, int rate, String description, File address) {
 		int pagesInt = 0;
 		
 		try {
@@ -36,7 +35,7 @@ public class BookManager {
 		return resBook;
 	}
 	
-	public static Book createBook(int id, String title, String author, Genres genre, int pages, int rate, String description, File address) {
+	public static Book createBook(int id, String title, String author, String genre, int pages, int rate, String description, File address) {
 		Book book = new Book(id, title, author, genre, pages, description, rate, address);
 		return book;
 	}

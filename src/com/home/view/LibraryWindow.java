@@ -27,6 +27,7 @@ import com.home.viewmodel.Library;
  */
 public class LibraryWindow extends JFrame implements Observer{		
 	public Library library;
+	public Book currentBook;
 	
 	public LibraryWindow(Library library) {
 		library.addObserver(this);
@@ -49,7 +50,7 @@ public class LibraryWindow extends JFrame implements Observer{
 		JTextField idField = new JTextField("Id: " + book.getId());
 		JTextField usernameField = new JTextField("Title: " + book.getTitle());
 		JTextField authorField = new JTextField("Author: " + book.getAuthor());
-		JTextField genresField = new JTextField("Genre: " + book.getGenre().getName());
+		JTextField genresField = new JTextField("Genre: " + book.getGenre());
 		JTextField pagesField = new JTextField("Pages: " + book.getPages());
 		
 		JTextArea descriptionField = new JTextArea("Description: " + book.getDescription(), 5, 5);
@@ -92,16 +93,12 @@ public class LibraryWindow extends JFrame implements Observer{
 	
 	private class ViewListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			String record = mainList.getSelectedValue();
-			Book book = library.getBookById(BookManager.getIdFromRecord(record));
-			
+		public void actionPerformed(ActionEvent e) {			
 			try {
-				Desktop.getDesktop().open(book.getFile());
+				Desktop.getDesktop().open(currentBook.getFile());
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
-			
 		}
 	}
 	
@@ -111,9 +108,9 @@ public class LibraryWindow extends JFrame implements Observer{
 			
 			int option = JOptionPane.showConfirmDialog(null, "You really wanna delete?");
 			if(option == JOptionPane.OK_OPTION) {
-				if(!mainList.isSelectionEmpty())  {
-					int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
-					Book currentBook = library.getBookById(bookId);
+				if(currentBook != null & !mainList.isSelectionEmpty())  {
+//					int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
+//					Book currentBook = library.getBookById(bookId);
 					
 					library.removeBook(currentBook);
 				}
@@ -127,7 +124,8 @@ public class LibraryWindow extends JFrame implements Observer{
 			// Show window with input areas
 			JTextField usernameField = new JTextField();
 			JTextField authorField = new JTextField();
-			JComboBox<Genres> genresField = new JComboBox<>(Genres.values());
+			JComboBox<String> genresField = new JComboBox<>(Genres.getArray());
+			genresField.setEditable(true);
 			JTextField pagesField = new JTextField();
 			
 			JTextArea descriptionField = new JTextArea(5, 5);
@@ -162,7 +160,9 @@ public class LibraryWindow extends JFrame implements Observer{
 				
 				File file = listener.getSelected();
 				
-				Book book = BookManager.createBook(usernameField.getText(), authorField.getText(),(Genres) genresField.getSelectedItem(), 
+				String genre = (String) genresField.getSelectedItem();
+				
+				Book book = BookManager.createBook(usernameField.getText(), authorField.getText(), genre, 
 						pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), file); //Need use address to file
 				library.addBook(book);
 			}
@@ -204,14 +204,15 @@ public class LibraryWindow extends JFrame implements Observer{
 	private class EditListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(!mainList.isSelectionEmpty()) {
-				int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
-				Book currentBook = library.getBookById(bookId);
+			if(currentBook != null & !mainList.isSelectionEmpty()) {
+//				int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
+//				Book currentBook = library.getBookById(bookId);
 				
 				JTextField usernameField = new JTextField(currentBook.getTitle());
 				JTextField authorField = new JTextField(currentBook.getAuthor());
-				JComboBox<Genres> genresField = new JComboBox<>(Genres.values());
+				JComboBox<String> genresField = new JComboBox<>(Genres.getArray());
 				genresField.setSelectedItem(currentBook.getGenre());
+				genresField.setEditable(true);
 				JTextField pagesField = new JTextField(Integer.toString(currentBook.getPages()));
 				
 				JTextArea descriptionField = new JTextArea(currentBook.getDescription(), 5, 5);
@@ -242,8 +243,10 @@ public class LibraryWindow extends JFrame implements Observer{
 				int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 				if (option == JOptionPane.OK_OPTION) {
 				    // Creating book by books' creator
+					
+					String genre = (String) genresField.getSelectedItem();
 										
-					Book newBook = BookManager.createBookForReplace(currentBook, usernameField.getText(), authorField.getText(), (Genres) genresField.getSelectedItem(),
+					Book newBook = BookManager.createBookForReplace(currentBook, usernameField.getText(), authorField.getText(), genre,
 							pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), listener.getSelected());
 //					currentBook.setTitle(usernameField.getText());
 //					currentBook.setAuthor(authorField.getText());
@@ -265,9 +268,9 @@ public class LibraryWindow extends JFrame implements Observer{
 			if(e.getClickCount() == 2 && !mainList.isSelectionEmpty()) {
 				String record = mainList.getSelectedValue();
 				//library.printBook(BookManager.getIdFromRecord(record));
-				viewBook(library.getBookById(BookManager.getIdFromRecord(record)));
+				currentBook = library.getBookById(BookManager.getIdFromRecord(record));
+				viewBook(currentBook);
 			}
-			// TODO Auto-generated method stub
 			super.mouseClicked(e);
 		}
 	}

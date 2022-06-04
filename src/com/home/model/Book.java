@@ -6,13 +6,13 @@ public class Book{
 	private int id;
 	private String title;
 	private String author;
-	private Genres genre;
+	private String genre;
 	private int pages;
 	private String description;
 	private int rating;
 	private File address;
 	
-	public Book(int id, String title, String author, Genres genre, int pages, String description, int rating, File address) {
+	public Book(int id, String title, String author, String genre, int pages, String description, int rating, File address) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -71,11 +71,11 @@ public class Book{
 		this.rating = rating;
 	}
 	
-	public Genres getGenre() {
+	public String getGenre() {
 		return genre;
 	}
 	
-	public void setGenre(Genres genre) {
+	public void setGenre(String genre) {
 		this.genre = genre;
 	}
 	

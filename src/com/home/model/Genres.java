@@ -1,27 +1,25 @@
 package com.home.model;
 
-public enum Genres {
-	NULL(""), FANTASY("Fantasy"), ACTION("Action"), ADVENTURE("Adventure"), CLASSICS("Classics"),
-	COMIC("Comic"), DETECTIVE("Detective"), MYSTERY("Mystery"), HISTORICAL("Historical Fiction"),
-	HORROR("Horror"), LITERARY("Literary Fiction"), ROMANCE("Romance"), SCIENCE("Science Fiction"),
-	SHORT("Short Stories"), THRILLERS("Thrillers"), POETRY("Poetry");
-	
-	private String name;
+import java.util.ArrayList;
+import java.util.List;
 
-	private Genres(String name) {
-		this.name = name;
+public class Genres {	
+	
+	private static List<String> genresList = new ArrayList<>();
+	
+	public static void addGenresList(List<String> genres) {
+		genresList.addAll(genres);
 	}
-
-	public String getName() {
-		return name;
+		
+	public static void addGenre(String genre) {
+		Genres.genresList.add(genre);
 	}
 	
-	public static Genres findByName(String name) {
-		for(Genres genre : Genres.values()) {
-			if(genre.getName().equals(name)) {
-				return genre;
-			}
-		}
-		return null;
+	public static boolean hasGenre(String genre) {		
+		return Genres.genresList.indexOf(genre) != -1 ? true : false;
+	}
+	
+	public static String[] getArray() {
+		return Genres.genresList.toArray(new String[0]);
 	}
 }
