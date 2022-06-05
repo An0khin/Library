@@ -72,7 +72,7 @@ public class XMLManager {
 			NodeList list = root.getChildNodes();
 			
 			int rating;
-			String title, author, description, pages, genre;
+			String title, author, description, pages, genre, url;
 			File address;
 									
 			for(int i = 0; i < list.getLength(); i++) {
@@ -83,6 +83,7 @@ public class XMLManager {
 				pages = el.getElementsByTagName("pages").item(0).getTextContent();
 				description = el.getElementsByTagName("description").item(0).getTextContent();
 				rating = Integer.parseInt(el.getElementsByTagName("rating").item(0).getTextContent());
+				url = el.getElementsByTagName("url").item(0).getTextContent();
 				
 				String adr = el.getElementsByTagName("address").item(0).getTextContent();
 				if(adr.isEmpty()) {
@@ -91,7 +92,7 @@ public class XMLManager {
 					address = new File(adr);
 				}
 				
-				listBooks.add(BookManager.createBook(title, author, genre, pages, rating, description, address));
+				listBooks.add(BookManager.createBook(title, author, genre, pages, rating, description, address, url));
 			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
@@ -115,7 +116,7 @@ public class XMLManager {
 			Element root = (Element) list.item(0);
 			
 			root.appendChild(getBook(doc, book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(),
-					book.getPages(), book.getDescription(), book.getRating(), book.getFile()));
+					book.getPages(), book.getDescription(), book.getRating(), book.getFile(), book.getUrl()));
 			
 			doc.getDocumentElement().normalize();
 			
@@ -158,6 +159,7 @@ public class XMLManager {
 					el.getElementsByTagName("description").item(0).setTextContent(book.getDescription());
 					el.getElementsByTagName("rating").item(0).setTextContent(Integer.toString(book.getRating()));
 					el.getElementsByTagName("address").item(0).setTextContent(BookManager.getAddress(book.getFile()));
+					el.getElementsByTagName("url").item(0).setTextContent(book.getUrl());
 					break;
 				}
 			}
@@ -214,7 +216,7 @@ public class XMLManager {
 		}
 	}
 		
-	private static Node getBook(Document doc, int id, String title, String author, String genre, int pages, String description, int rating, File address) {
+	private static Node getBook(Document doc, int id, String title, String author, String genre, int pages, String description, int rating, File address, String url) {
 		Element book = doc.createElement("Book");
 		
 		book.appendChild(getElement(doc, "id", String.valueOf(id)));
@@ -225,6 +227,7 @@ public class XMLManager {
 		book.appendChild(getElement(doc, "description", description));
 		book.appendChild(getElement(doc, "rating", String.valueOf(rating)));
 		book.appendChild(getElement(doc, "address", BookManager.getAddress(address)));
+		book.appendChild(getElement(doc, "url", url));
 		
 		return book;
 	}

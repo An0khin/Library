@@ -7,7 +7,7 @@ import com.home.model.Book;
 public class BookManager {
 	static int curId = 0;
 	
-	public static Book createBook(String title, String author, String genre, String pages, int rate, String description, File address) {
+	public static Book createBook(String title, String author, String genre, String pages, int rate, String description, File address, String url) {
 		int pagesInt = 0;
 		
 		try {
@@ -16,12 +16,12 @@ public class BookManager {
 			pagesInt = 0;
 		}
 		
-		Book book = new Book(curId++, title, author, genre, pagesInt, description, rate, address);
+		Book book = new Book(curId++, title, author, genre, pagesInt, description, rate, address, url); //URL
 	
 		return book;
 	}
 	
-	public static Book createBookForReplace(Book book, String title, String author, String genre, String pages, int rate, String description, File address) {
+	public static Book createBookForReplace(Book book, String title, String author, String genre, String pages, int rate, String description, File address, String url) {
 		int pagesInt = 0;
 		
 		try {
@@ -30,13 +30,13 @@ public class BookManager {
 			pagesInt = 0;
 		}
 		
-		Book resBook = new Book(book.getId(), title, author, genre, pagesInt, description, rate, address);
+		Book resBook = new Book(book.getId(), title, author, genre, pagesInt, description, rate, address, url); //URL
 		
 		return resBook;
 	}
 	
-	public static Book createBook(int id, String title, String author, String genre, int pages, int rate, String description, File address) {
-		Book book = new Book(id, title, author, genre, pages, description, rate, address);
+	public static Book createBook(int id, String title, String author, String genre, int pages, int rate, String description, File address, String url) {
+		Book book = new Book(id, title, author, genre, pages, description, rate, address, url); //URL
 		return book;
 	}
 	

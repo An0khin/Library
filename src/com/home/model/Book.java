@@ -1,6 +1,7 @@
 package com.home.model;
 
 import java.io.File;
+import java.net.URL;
 
 public class Book{
 	private int id;
@@ -11,8 +12,9 @@ public class Book{
 	private String description;
 	private int rating;
 	private File address;
+	private String url;
 	
-	public Book(int id, String title, String author, String genre, int pages, String description, int rating, File address) {
+	public Book(int id, String title, String author, String genre, int pages, String description, int rating, File address, String url) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -22,6 +24,7 @@ public class Book{
 		this.description = description;
 		this.rating = rating;
 		this.address = address;
+		this.url = url;
 	}
 	
 	//Getters and Setters	
@@ -85,5 +88,13 @@ public class Book{
 	
 	public void setFile(File address) {
 		this.address = address;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }
