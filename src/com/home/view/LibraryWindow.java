@@ -5,10 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -58,10 +55,10 @@ public class LibraryWindow extends JFrame implements Observer{
 		
 		JTextArea descriptionField = new JTextArea("Description: " + book.getDescription(), 5, 5);
 		descriptionField.setEditable(false);
-		JScrollPane descriptionPane = new JScrollPane(descriptionField);
-		descriptionPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		descriptionPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		descriptionPane.setAutoscrolls(true);
+		JScrollPane description = new JScrollPane(descriptionField);
+		description.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		description.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		description.setAutoscrolls(true);
 		
 		JTextField ratingField = new JTextField("Rating: " + book.getRating());
 		
@@ -70,12 +67,6 @@ public class LibraryWindow extends JFrame implements Observer{
 		
 		JTextField nameFile = new JTextField("File: " + BookManager.getAddress(book.getFile()));
 		nameFile.setEditable(false);
-		
-		JButton urlViewButton = new JButton("BROWSE URL");
-		urlViewButton.addActionListener(new UrlViewListener());
-		
-		JTextField url = new JTextField("Url: " + book.getUrl());
-		url.setEditable(false);
 					
 		JTextComponent[] message = {
 				idField,
@@ -92,31 +83,22 @@ public class LibraryWindow extends JFrame implements Observer{
 			bookReviewPanel.add(comp);
 		}
 		
-		bookReviewPanel.add(descriptionPane);
-		
-		if(nameFile.getText().length() > 6) {
-			bookReviewPanel.add(nameFile);
+		bookReviewPanel.add(description);
+		bookReviewPanel.add(nameFile);
+		if(nameFile.getText().length() > 6)
 			bookReviewPanel.add(viewButton);
-		}
 		
-		if(url.getText().length() > 5) {
-			bookReviewPanel.add(url);
-			bookReviewPanel.add(urlViewButton);
-		}
-					
 		this.validate();
-	}
-	
-	private class UrlViewListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			library.browseUrl(currentBook.getUrl());
-		}
 	}
 	
 	private class ViewListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			library.openBook(currentBook);
+		public void actionPerformed(ActionEvent e) {			
+			try {
+				Desktop.getDesktop().open(currentBook.getFile());
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 	
@@ -147,13 +129,13 @@ public class LibraryWindow extends JFrame implements Observer{
 			JTextField pagesField = new JTextField();
 			
 			JTextArea descriptionField = new JTextArea(5, 5);
-			JScrollPane descriptionPane = new JScrollPane(descriptionField);
-			descriptionPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			descriptionPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-			descriptionPane.setAutoscrolls(true);
+			JScrollPane description = new JScrollPane(descriptionField);
+			description.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			description.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			description.setAutoscrolls(true);
 			
-			Integer[] ratingAr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-			JComboBox<Integer> ratingField = new JComboBox<>(ratingAr);
+			Integer[] rating = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+			JComboBox<Integer> ratingField = new JComboBox<>(rating);
 			
 			
 			JLabel selectText = new JLabel();
@@ -167,7 +149,7 @@ public class LibraryWindow extends JFrame implements Observer{
 			    "Genres:", genresField,
 			    "Pages:", pagesField,
 			    "Rating:", ratingField,
-			    "Description:", descriptionPane,
+			    "Description:", description,
 			    button, selectText
 			};
 
@@ -175,22 +157,17 @@ public class LibraryWindow extends JFrame implements Observer{
 			
 			if(option == JOptionPane.OK_OPTION) {
 			    // Creating book by books' creator
-							
-				String title = usernameField.getText();
-				String author = authorField.getText();
-				String genre = (String) genresField.getSelectedItem();
-				String pages = pagesField.getText();
-				int rating = (int) ratingField.getSelectedItem();
-				String description = descriptionField.getText();
-				File file = listener.getSelected();
-				String url = library.getUrl(title, author);
 				
-				Book book = BookManager.createBook(title, author, genre, pages, rating, description, file, url); //Need use address to file
+				File file = listener.getSelected();
+				
+				String genre = (String) genresField.getSelectedItem();
+				
+				Book book = BookManager.createBook(usernameField.getText(), authorField.getText(), genre, 
+						pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), file); //Need use address to file
 				library.addBook(book);
 			}
 		}
 	}
-	
 	
 	private class FileListener implements ActionListener {
 		File file;
@@ -239,13 +216,13 @@ public class LibraryWindow extends JFrame implements Observer{
 				JTextField pagesField = new JTextField(Integer.toString(currentBook.getPages()));
 				
 				JTextArea descriptionField = new JTextArea(currentBook.getDescription(), 5, 5);
-				JScrollPane descriptionPane = new JScrollPane(descriptionField);
-				descriptionPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-				descriptionPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-				descriptionPane.setAutoscrolls(true);
+				JScrollPane description = new JScrollPane(descriptionField);
+				description.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				description.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+				description.setAutoscrolls(true);
 				
-				Integer[] ratingAr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-				JComboBox<Integer> ratingField = new JComboBox<>(ratingAr);
+				Integer[] rating = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+				JComboBox<Integer> ratingField = new JComboBox<>(rating);
 				ratingField.setSelectedItem(currentBook.getRating());
 				
 				JLabel selectText = new JLabel();
@@ -259,26 +236,25 @@ public class LibraryWindow extends JFrame implements Observer{
 				    "Genres:", genresField,
 				    "Pages:", pagesField,
 				    "Rating:", ratingField,
-				    "Description:", descriptionPane,
+				    "Description:", description,
 				    button, selectText
 				};
 
 				int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 				if (option == JOptionPane.OK_OPTION) {
 				    // Creating book by books' creator
-										
-					String title = usernameField.getText();
-					String author = authorField.getText();
-					String genre = (String) genresField.getSelectedItem();
-					String pages = pagesField.getText();
-					int rating = (int) ratingField.getSelectedItem();
-					String description = descriptionField.getText();
-					File file = listener.getSelected();
-					String url = library.getUrl(title, author);
 					
-					Book book = BookManager.createBook(title, author, genre, pages, rating, description, file, url); //Need use address to file
+					String genre = (String) genresField.getSelectedItem();
 										
-					Book newBook = BookManager.createBookForReplace(currentBook, title, author, genre, pages, rating, description, file, url);		
+					Book newBook = BookManager.createBookForReplace(currentBook, usernameField.getText(), authorField.getText(), genre,
+							pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), listener.getSelected());
+//					currentBook.setTitle(usernameField.getText());
+//					currentBook.setAuthor(authorField.getText());
+//					currentBook.setGenre((Genres) genresField.getSelectedItem());
+//					currentBook.setPages(Integer.parseInt(pagesField.getText()));
+//					currentBook.setRating((int) ratingField.getSelectedItem());
+//					currentBook.setDescription(descriptionField.getText());
+					
 					library.editBook(currentBook, newBook);
 				}
 			}
@@ -293,7 +269,7 @@ public class LibraryWindow extends JFrame implements Observer{
 				String record = mainList.getSelectedValue();
 				//library.printBook(BookManager.getIdFromRecord(record));
 				currentBook = library.getBookById(BookManager.getIdFromRecord(record));
-				viewBook(currentBook);			
+				viewBook(currentBook);
 			}
 			super.mouseClicked(e);
 		}
