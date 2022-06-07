@@ -67,6 +67,12 @@ public class LibraryWindow extends JFrame implements Observer{
 		
 		JTextField nameFile = new JTextField("File: " + BookManager.getAddress(book.getFile()));
 		nameFile.setEditable(false);
+		
+		JButton browseUrlButton = new JButton("BROWSE URL");
+		browseUrlButton.addActionListener(new BrowseUrlListener());
+		
+		JTextField nameUrl = new JTextField("URL: " + book.getUrl());
+		nameUrl.setEditable(false);
 					
 		JTextComponent[] message = {
 				idField,
@@ -84,34 +90,27 @@ public class LibraryWindow extends JFrame implements Observer{
 		}
 		
 		bookReviewPanel.add(description);
-		bookReviewPanel.add(nameFile);
-		if(nameFile.getText().length() > 6)
-			bookReviewPanel.add(viewButton);
 		
+		if(nameFile.getText().length() > 6) {
+			bookReviewPanel.add(nameFile);
+			bookReviewPanel.add(viewButton);
+		}
+		
+		if(nameUrl.getText().length() > 5) {
+			bookReviewPanel.add(nameUrl);
+			bookReviewPanel.add(browseUrlButton);
+		}
+			
 		this.validate();
 	}
-	
-	private class ViewListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {			
-			try {
-				Desktop.getDesktop().open(currentBook.getFile());
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-	
+		
 	private class DeleteListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
 			int option = JOptionPane.showConfirmDialog(null, "You really wanna delete?");
 			if(option == JOptionPane.OK_OPTION) {
-				if(currentBook != null & !mainList.isSelectionEmpty())  {
-//					int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
-//					Book currentBook = library.getBookById(bookId);
-					
+				if(currentBook != null & !mainList.isSelectionEmpty())  {					
 					library.removeBook(currentBook);
 				}
 			}
@@ -129,13 +128,13 @@ public class LibraryWindow extends JFrame implements Observer{
 			JTextField pagesField = new JTextField();
 			
 			JTextArea descriptionField = new JTextArea(5, 5);
-			JScrollPane description = new JScrollPane(descriptionField);
-			description.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			description.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-			description.setAutoscrolls(true);
+			JScrollPane descriptionPane = new JScrollPane(descriptionField);
+			descriptionPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			descriptionPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			descriptionPane.setAutoscrolls(true);
 			
-			Integer[] rating = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-			JComboBox<Integer> ratingField = new JComboBox<>(rating);
+			Integer[] ratingAr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+			JComboBox<Integer> ratingField = new JComboBox<>(ratingAr);
 			
 			
 			JLabel selectText = new JLabel();
@@ -149,7 +148,7 @@ public class LibraryWindow extends JFrame implements Observer{
 			    "Genres:", genresField,
 			    "Pages:", pagesField,
 			    "Rating:", ratingField,
-			    "Description:", description,
+			    "Description:", descriptionPane,
 			    button, selectText
 			};
 
@@ -158,17 +157,97 @@ public class LibraryWindow extends JFrame implements Observer{
 			if(option == JOptionPane.OK_OPTION) {
 			    // Creating book by books' creator
 				
+				String title = usernameField.getText();
+				String author = authorField.getText();
+				String genre = (String) genresField.getSelectedItem();
+				String pages = pagesField.getText();
+				int rating = (int) ratingField.getSelectedItem();
+				String description = descriptionField.getText();
 				File file = listener.getSelected();
 				
-				String genre = (String) genresField.getSelectedItem();
-				
-				Book book = BookManager.createBook(usernameField.getText(), authorField.getText(), genre, 
-						pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), file); //Need use address to file
+				Book book = BookManager.createBook(title, author, genre, pages, rating, description, file); //Need use address to file
 				library.addBook(book);
+				
+				library.setUrl(book);
+			}
+		}
+	}
+		
+	private class EditListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(currentBook != null & !mainList.isSelectionEmpty()) {
+//				int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
+//				Book currentBook = library.getBookById(bookId);
+				
+				JTextField usernameField = new JTextField(currentBook.getTitle());
+				JTextField authorField = new JTextField(currentBook.getAuthor());
+				JComboBox<String> genresField = new JComboBox<>(Genres.getArray());
+				genresField.setSelectedItem(currentBook.getGenre());
+				genresField.setEditable(true);
+				JTextField pagesField = new JTextField(Integer.toString(currentBook.getPages()));
+				
+				JTextArea descriptionField = new JTextArea(currentBook.getDescription(), 5, 5);
+				JScrollPane descriptionPane = new JScrollPane(descriptionField);
+				descriptionPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				descriptionPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+				descriptionPane.setAutoscrolls(true);
+				
+				Integer[] ratingAr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+				JComboBox<Integer> ratingField = new JComboBox<>(ratingAr);
+				ratingField.setSelectedItem(currentBook.getRating());
+				
+				JLabel selectText = new JLabel();
+				FileListener listener = new FileListener(selectText, currentBook.getFile());
+				JButton button = new JButton("SELECT FILE: ");
+				button.addActionListener(listener);
+							
+				Object[] message = {
+				    "Title:", usernameField,
+				    "Author:", authorField,
+				    "Genres:", genresField,
+				    "Pages:", pagesField,
+				    "Rating:", ratingField,
+				    "Description:", descriptionPane,
+				    button, selectText
+				};
+
+				int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+				if (option == JOptionPane.OK_OPTION) {
+				    // Creating book by books' creator
+									
+					String title = usernameField.getText();
+					String author = authorField.getText();
+					String genre = (String) genresField.getSelectedItem();
+					String pages = pagesField.getText();
+					int rating = (int) ratingField.getSelectedItem();
+					String description = descriptionField.getText();
+					File file = listener.getSelected();
+										
+					Book newBook = BookManager.createBookForReplace(currentBook, title, author, genre, pages, rating, description, file, "");
+
+					library.editBook(currentBook, newBook);
+					
+					library.setUrl(newBook);
+				}
 			}
 		}
 	}
 	
+	private class ViewListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			library.openBook(currentBook);
+		}
+	}
+	
+	private class BrowseUrlListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent ev) {
+			library.browseUrl(currentBook.getUrl());
+		}
+	}
+		
 	private class FileListener implements ActionListener {
 		File file;
 		JLabel text;
@@ -200,67 +279,7 @@ public class LibraryWindow extends JFrame implements Observer{
 			}
 		}
 	}
-	
-	private class EditListener implements ActionListener{
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(currentBook != null & !mainList.isSelectionEmpty()) {
-//				int bookId = BookManager.getIdFromRecord(mainList.getSelectedValue());
-//				Book currentBook = library.getBookById(bookId);
-				
-				JTextField usernameField = new JTextField(currentBook.getTitle());
-				JTextField authorField = new JTextField(currentBook.getAuthor());
-				JComboBox<String> genresField = new JComboBox<>(Genres.getArray());
-				genresField.setSelectedItem(currentBook.getGenre());
-				genresField.setEditable(true);
-				JTextField pagesField = new JTextField(Integer.toString(currentBook.getPages()));
-				
-				JTextArea descriptionField = new JTextArea(currentBook.getDescription(), 5, 5);
-				JScrollPane description = new JScrollPane(descriptionField);
-				description.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-				description.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-				description.setAutoscrolls(true);
-				
-				Integer[] rating = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-				JComboBox<Integer> ratingField = new JComboBox<>(rating);
-				ratingField.setSelectedItem(currentBook.getRating());
-				
-				JLabel selectText = new JLabel();
-				FileListener listener = new FileListener(selectText, currentBook.getFile());
-				JButton button = new JButton("SELECT FILE: ");
-				button.addActionListener(listener);
-							
-				Object[] message = {
-				    "Title:", usernameField,
-				    "Author:", authorField,
-				    "Genres:", genresField,
-				    "Pages:", pagesField,
-				    "Rating:", ratingField,
-				    "Description:", description,
-				    button, selectText
-				};
-
-				int option = JOptionPane.showConfirmDialog(null, message, "New Book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-				if (option == JOptionPane.OK_OPTION) {
-				    // Creating book by books' creator
-					
-					String genre = (String) genresField.getSelectedItem();
-										
-					Book newBook = BookManager.createBookForReplace(currentBook, usernameField.getText(), authorField.getText(), genre,
-							pagesField.getText(), (int) ratingField.getSelectedItem(), descriptionField.getText(), listener.getSelected());
-//					currentBook.setTitle(usernameField.getText());
-//					currentBook.setAuthor(authorField.getText());
-//					currentBook.setGenre((Genres) genresField.getSelectedItem());
-//					currentBook.setPages(Integer.parseInt(pagesField.getText()));
-//					currentBook.setRating((int) ratingField.getSelectedItem());
-//					currentBook.setDescription(descriptionField.getText());
-					
-					library.editBook(currentBook, newBook);
-				}
-			}
-		}
-	}
-	
+		
 	private class CheckerClicks extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {

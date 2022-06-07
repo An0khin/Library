@@ -1,13 +1,27 @@
 package com.home.viewmodel;
 
+import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Scanner;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import com.home.model.Book;
 import com.home.model.BookList;
@@ -97,5 +111,58 @@ public class Library extends Observable{
 		books.removeBook(book);
 		xmlManager.removeBook(book);
 		change();
+	}
+
+	public void openBook(Book book) { 
+		try {
+			Desktop.getDesktop().open(book.getFile());
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void browseUrl(String url) {
+		try {
+			Desktop.getDesktop().browse(new URL(url).toURI());;
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void setUrl(Book book) {
+		Thread thr = new Thread(new UrlFinder(book));
+		thr.start();
+	}
+	
+	private class UrlFinder implements Runnable {
+		Book book;
+		
+		UrlFinder(Book book) {
+			this.book = book;
+		}
+		
+		public void run() {
+			String result = "";
+			
+			try {
+				String urlPattern = "https://searx.be/search?q=keyword";
+				String url = urlPattern.replace("keyword", URLEncoder.encode(book.getTitle() + " " + book.getAuthor() + " читать", "utf-8"));
+				String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36";
+				
+				Document doc = Jsoup.connect(url).userAgent(userAgent).get();
+				
+				Elements links = doc.select("h4");
+				
+				result = links.select("a").get(0).attr("href");
+				
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			
+			editBook(book, BookManager.createBookForReplace(book, book.getTitle(), book.getAuthor(), book.getGenre(), 
+					Integer.toString(book.getPages()), book.getRating(), book.getDescription(), book.getFile(), result));
+			
+			System.out.println("Done");
+		}
 	}
 }
