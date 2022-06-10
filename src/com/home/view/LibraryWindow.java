@@ -110,7 +110,7 @@ public class LibraryWindow extends JFrame implements Observer{
 			
 			int option = JOptionPane.showConfirmDialog(null, "You really wanna delete?");
 			if(option == JOptionPane.OK_OPTION) {
-				if(currentBook != null & !mainList.isSelectionEmpty())  {					
+				if(currentBook != null && !mainList.isSelectionEmpty())  {					
 					library.removeBook(currentBook);
 				}
 			}
@@ -123,8 +123,10 @@ public class LibraryWindow extends JFrame implements Observer{
 			// Show window with input areas
 			JTextField usernameField = new JTextField();
 			JTextField authorField = new JTextField();
+			
 			JComboBox<String> genresField = new JComboBox<>(Genres.getArray());
 			genresField.setEditable(true);
+			
 			JTextField pagesField = new JTextField();
 			
 			JTextArea descriptionField = new JTextArea(5, 5);
@@ -223,12 +225,14 @@ public class LibraryWindow extends JFrame implements Observer{
 					int rating = (int) ratingField.getSelectedItem();
 					String description = descriptionField.getText();
 					File file = listener.getSelected();
+					String url = currentBook.getUrl();
 										
-					Book newBook = BookManager.createBookForReplace(currentBook, title, author, genre, pages, rating, description, file, "");
+					Book newBook = BookManager.createBookForReplace(currentBook, title, author, genre, pages, rating, description, file, url);
 
 					library.editBook(currentBook, newBook);
 					
-					library.setUrl(newBook);
+					if(url.isEmpty())
+						library.setUrl(newBook);
 				}
 			}
 		}
@@ -293,21 +297,48 @@ public class LibraryWindow extends JFrame implements Observer{
 			super.mouseClicked(e);
 		}
 	}
+	
+	private class ImportListener implements ActionListener {
+		public void actionPerformed(ActionEvent ev) {
+			JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+			int option = chooser.showOpenDialog(null);
+			
+			if(option == JFileChooser.APPROVE_OPTION) {
+				library.mergeXML(chooser.getSelectedFile());
+			}
+			
+		}
+	}
+	
+	private class ExportListener implements ActionListener {
+		public void actionPerformed(ActionEvent ev) {
+			JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+			int option = chooser.showSaveDialog(null);
+			
+			if(option == JFileChooser.APPROVE_OPTION) {
+				library.export(chooser.getSelectedFile());
+			}
+		}
+	}
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		menuBar1 = new JMenuBar();
+		fileMenu = new JMenu();
+		importXMLMenu = new JMenuItem();
+		exportXMLMenu = new JMenuItem();
 		viewMenu = new JMenu();
 		booksMenu = new JMenuItem();
 		authorsMenu = new JMenuItem();
 		genresMenu = new JMenuItem();
-		scrollPane1 = new JScrollPane();
-		mainList = new JList<>();
-		bookReviewPanel = new JPanel();
 		buttonsPanel = new JPanel();
 		buttonNew = new JButton();
 		buttonEdit = new JButton();
 		buttonDelete = new JButton();
+		mainPanel = new JPanel();
+		scrollPane1 = new JScrollPane();
+		mainList = new JList<>();
+		bookReviewPanel = new JPanel();
 
 		//======== this ========
 		setTitle("Own Library");
@@ -318,6 +349,20 @@ public class LibraryWindow extends JFrame implements Observer{
 
 		//======== menuBar1 ========
 		{
+
+			//======== fileMenu ========
+			{
+				fileMenu.setText("File");
+
+				//---- importXMLMenu ----
+				importXMLMenu.setText("Import XML");
+				fileMenu.add(importXMLMenu);
+
+				//---- exportXMLMenu ----
+				exportXMLMenu.setText("Export XML");
+				fileMenu.add(exportXMLMenu);
+			}
+			menuBar1.add(fileMenu);
 
 			//======== viewMenu ========
 			{
@@ -338,20 +383,6 @@ public class LibraryWindow extends JFrame implements Observer{
 			menuBar1.add(viewMenu);
 		}
 		setJMenuBar(menuBar1);
-
-		//======== scrollPane1 ========
-		{
-			scrollPane1.setViewportView(mainList);
-		}
-		contentPane.add(scrollPane1, BorderLayout.CENTER);
-
-		//======== bookReviewPanel ========
-		{
-			bookReviewPanel.setPreferredSize(new Dimension(250, 0));
-			bookReviewPanel.setMinimumSize(new Dimension(150, 0));
-			bookReviewPanel.setLayout(new BoxLayout(bookReviewPanel, BoxLayout.Y_AXIS));
-		}
-		contentPane.add(bookReviewPanel, BorderLayout.EAST);
 
 		//======== buttonsPanel ========
 		{
@@ -378,6 +409,31 @@ public class LibraryWindow extends JFrame implements Observer{
 			buttonsPanel.add(buttonDelete);
 		}
 		contentPane.add(buttonsPanel, BorderLayout.SOUTH);
+
+		//======== mainPanel ========
+		{
+			mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+
+			//======== scrollPane1 ========
+			{
+				scrollPane1.setMinimumSize(new Dimension(200, 23));
+				scrollPane1.setPreferredSize(new Dimension(200, 146));
+
+				//---- mainList ----
+				mainList.setMinimumSize(new Dimension(200, 54));
+				mainList.setPreferredSize(new Dimension(200, 54));
+				mainList.setMaximumSize(new Dimension(20000, 54));
+				scrollPane1.setViewportView(mainList);
+			}
+			mainPanel.add(scrollPane1);
+
+			//======== bookReviewPanel ========
+			{
+				bookReviewPanel.setLayout(new BoxLayout(bookReviewPanel, BoxLayout.Y_AXIS));
+			}
+			mainPanel.add(bookReviewPanel);
+		}
+		contentPane.add(mainPanel, BorderLayout.CENTER);
 		setSize(460, 410);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -386,20 +442,26 @@ public class LibraryWindow extends JFrame implements Observer{
 		buttonNew.addActionListener(new NewListener());
 		buttonEdit.addActionListener(new EditListener());
 		buttonDelete.addActionListener(new DeleteListener());
+		importXMLMenu.addActionListener(new ImportListener());
+		exportXMLMenu.addActionListener(new ExportListener());
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JMenuBar menuBar1;
+	private JMenu fileMenu;
+	private JMenuItem importXMLMenu;
+	private JMenuItem exportXMLMenu;
 	private JMenu viewMenu;
 	private JMenuItem booksMenu;
 	private JMenuItem authorsMenu;
 	private JMenuItem genresMenu;
-	private JScrollPane scrollPane1;
-	private JList<String> mainList;
-	private JPanel bookReviewPanel;
 	private JPanel buttonsPanel;
 	private JButton buttonNew;
 	private JButton buttonEdit;
 	private JButton buttonDelete;
+	private JPanel mainPanel;
+	private JScrollPane scrollPane1;
+	private JList<String> mainList;
+	private JPanel bookReviewPanel;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

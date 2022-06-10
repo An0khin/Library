@@ -1,23 +1,16 @@
 package com.home.viewmodel;
 
 import java.awt.Desktop;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
-
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
-import java.util.Scanner;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,7 +28,14 @@ public class Library extends Observable{
 	XMLManager xmlManager;
 	
 	public Library() {
-		directory = new File(System.getProperty("user.dir"));
+		directory = new File(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Library");
+		directory.mkdir();
+		try {
+			Thread.sleep(1);
+		} catch(Exception e) {e.printStackTrace();}
+		
+		directory = new File(directory.getPath() + File.separator + "data.xml");
+		
 		xmlManager = new XMLManager(directory);
 		
 		prepareGenres();
@@ -45,37 +45,26 @@ public class Library extends Observable{
 		List<String> startGenres = new ArrayList<>(Arrays.asList(new String[] {"", "Fantasy", "Action", "Adventure", "Classics", "Comic", "Detective", "Mystery", "Historical Fiction", 
 				"Horror", "Literary Fiction", "Romance", "Science Fiction", "Short Stories", "Thrillers", "Poetry"}));
 		
-		genresFile = new File(directory + File.separator + "Genres.txt");
-		
-		if(genresFile.exists()) {
-			try(Scanner scan = new Scanner(genresFile)) {
-				
-				while(scan.hasNext()) {
-					startGenres.add(scan.nextLine().trim());
-				}
-				
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		Genres.addGenresList(startGenres);		
+		Genres.addGenresList(startGenres);
+		Genres.addGenresList(xmlManager.getGenresList());
 	}
 	
 	private void checkGenres(String genre) {
-		if(!Genres.hasGenre(genre)) {			
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter(genresFile))) {
-				bw.write(genre + "\n");		
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
+		if(!Genres.hasGenre(genre)) {
+			Genres.addGenre(genre);
+			xmlManager.addGenre(genre);
 		}
+	}
+	
+	private void setListBook() {
+		books.clear();
+		books.addAll(xmlManager.getListBook());
+		change();
 	}
 	
 	public void setModel(BookList books) {
 		this.books = books;
-		this.books.addAll(xmlManager.getList());
-		change();
+		setListBook();
 	}
 	
 	public void change() {
@@ -85,6 +74,21 @@ public class Library extends Observable{
 	
 	public List<String> getList() {
 		return books.getList();
+	}
+	
+	public void mergeXML(File xml) {
+		xmlManager.mergeXML(xml);
+		prepareGenres();
+		setListBook();
+	}
+
+	public void export(File file) {
+		try {
+			Files.copy(directory.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
 	}
 	
 	public void addBook(Book book) {
@@ -159,10 +163,12 @@ public class Library extends Observable{
 				ex.printStackTrace();
 			}
 			
-			editBook(book, BookManager.createBookForReplace(book, book.getTitle(), book.getAuthor(), book.getGenre(), 
-					Integer.toString(book.getPages()), book.getRating(), book.getDescription(), book.getFile(), result));
+			if(!result.isEmpty() && result != book.getUrl()) {
+				editBook(book, BookManager.createBookForReplace(book, book.getTitle(), book.getAuthor(), book.getGenre(), 
+						Integer.toString(book.getPages()), book.getRating(), book.getDescription(), book.getFile(), result));
 			
-			System.out.println("Done");
+				System.out.println("Done");
+			}
 		}
 	}
 }

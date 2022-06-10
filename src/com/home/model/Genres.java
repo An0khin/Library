@@ -8,7 +8,12 @@ public class Genres {
 	private static List<String> genresList = new ArrayList<>();
 	
 	public static void addGenresList(List<String> genres) {
-		genresList.addAll(genres);
+		for(String genre : genres) {
+			if(!hasGenre(genre)) {
+				addGenre(genre);
+			}
+		}
+//		genresList.addAll(genres);
 	}
 		
 	public static void addGenre(String genre) {

@@ -39,8 +39,9 @@ public class BookManager {
 		return resBook;
 	}
 	
-	public static Book createBook(int id, String title, String author, String genre, int pages, int rate, String description, File address) {
-		Book book = new Book(id, title, author, genre, pages, description, rate, address, "");
+	public static Book createBook(int id, String title, String author, String genre, int pages, int rate, String description, File address, String url) {
+		Book book = new Book(id, title, author, genre, pages, description, rate, address, url);
+		curId = id + 1;
 		return book;
 	}
 	

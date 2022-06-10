@@ -63,4 +63,8 @@ public class BookList {
 		
 		books.remove(book);
 	}
+	
+	public void clear() {
+		books.clear();
+	}
 }

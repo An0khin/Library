@@ -9,23 +9,6 @@ new FormModel {
 			"defaultCloseOperation": 3
 			"visible": true
 			"$sizePolicy": 1
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollPane1"
-				add( new FormComponent( "javax.swing.JList" ) {
-					name: "mainList"
-				} )
-			}, new FormLayoutConstraints( class java.lang.String ) {
-				"value": "Center"
-			} )
-			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
-				"axis": 1
-			} ) {
-				name: "bookReviewPanel"
-				"preferredSize": new java.awt.Dimension( 250, 0 )
-				"minimumSize": new java.awt.Dimension( 150, 0 )
-			}, new FormLayoutConstraints( class java.lang.String ) {
-				"value": "East"
-			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) ) {
 				name: "buttonsPanel"
 				add( new FormComponent( "javax.swing.JButton" ) {
@@ -51,8 +34,43 @@ new FormModel {
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "South"
 			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+				"axis": 0
+			} ) {
+				name: "mainPanel"
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane1"
+					"minimumSize": new java.awt.Dimension( 200, 23 )
+					"preferredSize": new java.awt.Dimension( 200, 146 )
+					add( new FormComponent( "javax.swing.JList" ) {
+						name: "mainList"
+						"minimumSize": new java.awt.Dimension( 200, 54 )
+						"preferredSize": new java.awt.Dimension( 200, 54 )
+						"maximumSize": new java.awt.Dimension( 20000, 54 )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+					"axis": 1
+				} ) {
+					name: "bookReviewPanel"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "menuBar1"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "fileMenu"
+					"text": "File"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "importXMLMenu"
+						"text": "Import XML"
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "exportXMLMenu"
+						"text": "Export XML"
+					} )
+				} )
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "viewMenu"
 					"text": "View"
