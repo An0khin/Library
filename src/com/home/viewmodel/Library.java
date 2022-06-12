@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.io.File;
 
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -12,15 +11,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
 import com.home.model.Book;
 import com.home.model.BookList;
 import com.home.model.Genres;
 
-public class Library extends Observable{
+public class Library extends Observable {
 	
 	File directory;
 	File genresFile;
@@ -88,7 +83,6 @@ public class Library extends Observable{
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		
 	}
 	
 	public void addBook(Book book) {
@@ -127,48 +121,28 @@ public class Library extends Observable{
 	
 	public void browseUrl(String url) {
 		try {
-			Desktop.getDesktop().browse(new URL(url).toURI());;
+			Desktop.getDesktop().browse(new URL(url).toURI());
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
 	public void setUrl(Book book) {
-		Thread thr = new Thread(new UrlFinder(book));
+		Thread thr = new Thread(new UrlFinder(this, book));
 		thr.start();
 	}
 	
-	private class UrlFinder implements Runnable {
-		Book book;
-		
-		UrlFinder(Book book) {
-			this.book = book;
-		}
-		
-		public void run() {
-			String result = "";
-			
-			try {
-				String urlPattern = "https://searx.be/search?q=keyword";
-				String url = urlPattern.replace("keyword", URLEncoder.encode(book.getTitle() + " " + book.getAuthor() + " читать", "utf-8"));
-				String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36";
+	public void setView(Views view) {
+		switch (view) {
+			case BOOKS:
+				setListBook();
+				break;
 				
-				Document doc = Jsoup.connect(url).userAgent(userAgent).get();
+			case AUTHORS:
+				break;
 				
-				Elements links = doc.select("h4");
-				
-				result = links.select("a").get(0).attr("href");
-				
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-			
-			if(!result.isEmpty() && result != book.getUrl()) {
-				editBook(book, BookManager.createBookForReplace(book, book.getTitle(), book.getAuthor(), book.getGenre(), 
-						Integer.toString(book.getPages()), book.getRating(), book.getDescription(), book.getFile(), result));
-			
-				System.out.println("Done");
-			}
+			case GENRES:
+				break;
 		}
 	}
 }
