@@ -139,10 +139,17 @@ public class Library extends Observable {
 				break;
 				
 			case AUTHORS:
+				books.clear();
+				books.addAll(xmlManager.getListBook());
+				books.sortByAuthor();
 				break;
 				
 			case GENRES:
+				books.clear();
+				books.addAll(xmlManager.getListBook());
+				books.sortByGenre();
 				break;
 		}
+		change();
 	}
 }
