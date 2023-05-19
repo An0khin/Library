@@ -4,9 +4,29 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LibraryWindow extends JFrame {
+    public JList<String> mainList;
+    public JButton buttonNew;
+    public JButton buttonEdit;
+    public JButton buttonDelete;
+    public JMenuItem importXmlMenu;
+    public JMenuItem exportXmlMenu;
+    public JMenuItem booksMenu;
+    public JMenuItem authorsMenu;
+    public JMenuItem genresMenu;
+    public JPanel bookReviewPanel;
+
+
     public LibraryWindow() {
         setSettings();
         initComponents();
+    }
+
+    private void setSettings() {
+        setTitle("Own Library");
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
+        setSize(460, 410);
+        setLocationRelativeTo(getOwner());
     }
 
     private void initComponents() {
@@ -21,19 +41,13 @@ public class LibraryWindow extends JFrame {
         contentPane.add(mainPanel, BorderLayout.CENTER);
     }
 
-    private void setSettings() {
-        setTitle("Own Library");
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
-        setSize(460, 410);
-        setLocationRelativeTo(getOwner());
-    }
     private Container setupContentPane() {
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
         return contentPane;
     }
+
     private JMenuBar setupMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
@@ -45,23 +59,25 @@ public class LibraryWindow extends JFrame {
 
         return menuBar;
     }
+
     private JMenu setupFileMenu() {
         JMenu fileMenu = new JMenu("File");
 
-        JMenuItem importXMLMenu = new JMenuItem("Import XML");
-        JMenuItem exportXMLMenu = new JMenuItem("Export XML");
+        importXmlMenu = new JMenuItem("Import XML");
+        exportXmlMenu = new JMenuItem("Export XML");
 
-        fileMenu.add(importXMLMenu);
-        fileMenu.add(exportXMLMenu);
+        fileMenu.add(importXmlMenu);
+        fileMenu.add(exportXmlMenu);
 
         return fileMenu;
     }
+
     private JMenu setupViewMenu() {
         JMenu viewMenu = new JMenu("View");
 
-        JMenuItem booksMenu = new JMenuItem("Books");
-        JMenuItem authorsMenu = new JMenuItem("Authors");
-        JMenuItem genresMenu = new JMenuItem("Genres");
+        booksMenu = new JMenuItem("Books");
+        authorsMenu = new JMenuItem("Authors");
+        genresMenu = new JMenuItem("Genres");
 
         viewMenu.add(booksMenu);
         viewMenu.add(authorsMenu);
@@ -69,13 +85,14 @@ public class LibraryWindow extends JFrame {
 
         return viewMenu;
     }
+
     private JPanel setupButtonsPanel() {
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
 
-        JButton buttonNew = setupButtonNew();
-        JButton buttonEdit = setupButtonEdit();
-        JButton buttonDelete = setupButtonDelete();
+        buttonNew = setupButtonNew();
+        buttonEdit = setupButtonEdit();
+        buttonDelete = setupButtonDelete();
 
         buttonsPanel.add(buttonNew);
         buttonsPanel.add(buttonEdit);
@@ -83,6 +100,7 @@ public class LibraryWindow extends JFrame {
 
         return buttonsPanel;
     }
+
     private JButton setupButtonNew() {
         JButton buttonNew = new JButton("NEW");
         buttonNew.setMinimumSize(new Dimension(39, 25));
@@ -92,6 +110,7 @@ public class LibraryWindow extends JFrame {
 
         return buttonNew;
     }
+
     private JButton setupButtonEdit() {
         JButton buttonEdit = new JButton("EDIT");
         buttonEdit.setMaximumSize(new Dimension(1920, 100));
@@ -99,6 +118,7 @@ public class LibraryWindow extends JFrame {
 
         return buttonEdit;
     }
+
     private JButton setupButtonDelete() {
         JButton buttonDelete = new JButton("DELETE");
         buttonDelete.setMaximumSize(new Dimension(1920, 100));
@@ -106,29 +126,32 @@ public class LibraryWindow extends JFrame {
 
         return buttonDelete;
     }
+
     private JPanel setupMainPanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 
         JScrollPane mainScrollPane = setupMainScrollPane();
-        JPanel bookReviewPanel = setupBookReviewPanel();
+        bookReviewPanel = setupBookReviewPanel();
 
         mainPanel.add(mainScrollPane);
         mainPanel.add(bookReviewPanel);
 
         return mainPanel;
     }
+
     private JScrollPane setupMainScrollPane() {
         JScrollPane scrollPane = new JScrollPane();
 
         scrollPane.setMinimumSize(new Dimension(200, 23));
         scrollPane.setPreferredSize(new Dimension(200, 146));
 
-        JList<String> mainList = setupMainList();
+        mainList = setupMainList();
         scrollPane.setViewportView(mainList);
 
         return scrollPane;
     }
+
     private JList<String> setupMainList() {
         JList<String> mainList = new JList<>();
 
@@ -138,6 +161,7 @@ public class LibraryWindow extends JFrame {
 
         return mainList;
     }
+
     private JPanel setupBookReviewPanel() {
         JPanel bookReviewPanel = new JPanel();
 

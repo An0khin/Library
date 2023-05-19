@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class BookList {
     private List<Book> books;
+
     public BookList() {
         books = new ArrayList<>();
     }
@@ -14,9 +15,11 @@ public class BookList {
     public void addBook(Book book) {
         books.add(book);
     }
-    public void adAll(List<Book> bookList) {
+
+    public void addAll(List<Book> bookList) {
         books.addAll(bookList);
     }
+
     public Book getBookById(int id) {
         for(Book book : books) {
             if(book.getId() == id) {
@@ -25,6 +28,7 @@ public class BookList {
         }
         return null;
     }
+
     public List<String> getList() {
         List<String> resultList = new ArrayList<>();
         for(Book book : books) {
@@ -32,6 +36,11 @@ public class BookList {
         }
         return resultList;
     }
+
+    public List<Book> getBooks() {
+        return new ArrayList<>(books);
+    }
+
     public void editBook(Book book, Book toBook) {
         int index = -1;
         for(int i = 0; i < books.size(); i++) {
@@ -44,8 +53,8 @@ public class BookList {
             books.set(index, toBook);
         }
     }
+
     public void removeBook(Book book) {
-        //BookManager.getDeleted() TODO
         boolean isFoundForDelete = false;
 
         for(Book tmpBook : books) {
@@ -60,9 +69,11 @@ public class BookList {
 
         books.remove(book);
     }
+
     public void clear() {
         books.clear();
     }
+
     public void sortByAuthor() {
         Set<String> authors = new HashSet<>();
         List<Book> resultList = new ArrayList<>();
