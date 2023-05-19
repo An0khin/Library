@@ -1,4 +1,4 @@
-package com.home.viewmodel;
+package com.home.old.viewmodel;
 
 import java.net.URLEncoder;
 
@@ -6,7 +6,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import com.home.model.Book;
+import com.home.old.model.Book;
 
 public class UrlFinder implements Runnable {
 

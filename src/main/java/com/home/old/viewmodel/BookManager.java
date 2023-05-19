@@ -1,8 +1,8 @@
-package com.home.viewmodel;
+package com.home.old.viewmodel;
 
 import java.io.File;
 
-import com.home.model.Book;
+import com.home.old.model.Book;
 
 public class BookManager {
 	static int curId = 0;

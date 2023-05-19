@@ -1,4 +1,4 @@
-package com.home.viewmodel;
+package com.home.old.viewmodel;
 public enum Views {
 	BOOKS(0), AUTHORS(1), GENRES(2);
 	

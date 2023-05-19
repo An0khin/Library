@@ -1,4 +1,4 @@
-package com.home.viewmodel;
+package com.home.old.viewmodel;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -11,9 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 
-import com.home.model.Book;
-import com.home.model.BookList;
-import com.home.model.Genres;
+import com.home.old.model.Book;
+import com.home.old.model.BookList;
+import com.home.old.model.Genres;
 
 public class Library extends Observable {
 	

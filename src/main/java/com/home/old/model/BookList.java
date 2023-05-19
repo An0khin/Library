@@ -1,11 +1,11 @@
-package com.home.model;
+package com.home.old.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.home.viewmodel.BookManager;
+import com.home.old.viewmodel.BookManager;
 
 public class BookList {
 	List<Book> books = new ArrayList<>();

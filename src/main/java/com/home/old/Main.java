@@ -1,8 +1,8 @@
-package com.home;
+package com.home.old;
 
-import com.home.model.BookList;
-import com.home.view.LibraryWindow;
-import com.home.viewmodel.Library;
+import com.home.old.model.BookList;
+import com.home.old.view.LibraryWindow;
+import com.home.old.viewmodel.Library;
 
 public class Main {
 	public static void main(String[] args) {

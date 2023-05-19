@@ -1,4 +1,4 @@
-package com.home.viewmodel;
+package com.home.old.viewmodel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.home.model.Book;
+import com.home.old.model.Book;
 
 public class XMLManager {
 	DocumentBuilderFactory factory;
